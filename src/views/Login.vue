@@ -2,6 +2,8 @@
 import { dealerLoginService } from '@/api/dealer.js'
 import { adminLoginService } from '@/api/admin.js'
 import MyFooter from '@/views/public/MyFooter.vue';
+import { useRouter } from 'vue-router'
+const router = useRouter()
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import SlideVerify from 'vue3-slide-verify';
@@ -71,6 +73,7 @@ const onLogin = async () => {
             return
         }
         ElMessage.success(result.msg ? result.msg : '登录成功')
+        router.push('/')
     }
     if (activeName.value === 'admin') {
         // 判断失败次数，如果大于等于5次需要滑块验证
@@ -87,6 +90,7 @@ const onLogin = async () => {
             return
         }
         ElMessage.success(result.msg ? result.msg : '登录成功')
+        router.push('/')
     }
 }
 
@@ -102,6 +106,7 @@ const onSuccess = async () => {
             return
         }
         ElMessage.success(result.msg ? result.msg : '登录成功')
+        router.push('/')
     }
     if (activeName.value === 'admin') {
         let result = await adminLoginService(loginData.value)
@@ -113,6 +118,7 @@ const onSuccess = async () => {
             return
         }
         ElMessage.success(result.msg ? result.msg : '登录成功')
+        router.push('/')
     }
 }
 
