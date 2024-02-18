@@ -2,6 +2,7 @@
 import { dealerLoginService } from '@/api/dealer'
 import MyFooter from '@/views/public/MyFooter.vue';
 import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
 import SlideVerify from 'vue3-slide-verify';
 import "vue3-slide-verify/dist/style.css"
 
@@ -16,6 +17,8 @@ const loginData = ref({
     username: '',
     password: ''
 })
+// 勾选框DOM
+const checkBoxContainer = ref(null);
 
 // 定义表单校验规则
 const rules = {
@@ -35,17 +38,30 @@ const clearLoginData = () => {
 }
 
 const onLogin = async () => {
+    // 判断是否勾选用户协议与隐私条款
+    if (checked.value == false) {
+        ElMessage.warning("请先勾选用户协议与隐私条款")
+        // 启动动画
+        checkBoxContainer.value.classList.add('shake');
+        // 结束动画后，移除shake类，以便下次再添加
+        checkBoxContainer.value.addEventListener('animationend', () => {
+          checkBoxContainer.value.classList.remove('shake');
+        });
+        return
+    }
+
     if (activeName.value === 'dealer') {
         let result = await dealerLoginService(loginData.value)
+        if (result.code == 0) {
+            alert(result.msg ? result.msg : '登录成功')
+        } else {
+            alert(result.msg ? result.msg : '登录失败')
+            // 失败次数+1
+        }
     } else {
         // let result = await adminLoginService(loginData.value)
     }
-    if (result.code == 0) {
-        alert(result.msg ? result.msg : '登录成功')
-    } else {
-        alert(result.msg ? result.msg : '登录失败')
-        // 失败次数+1
-    }
+
 }
 
 // const block = ref()
@@ -118,12 +134,11 @@ const onLogin = async () => {
                     </el-tab-pane>
                 </el-tabs>
                 <el-button @click="onLogin" size="large" type="primary" class="login-button">立即登录</el-button>
-                <div class="checkbox-container">
-                    <el-checkbox v-model="checked" />
-                    <span style="margin-left: 5px; font-size: 14px;">我已阅读并同意</span>
-                    <el-link type="primary" @click="drawer = true">&nbsp;用户协议与隐私条款&nbsp;</el-link>
-                </div>
-
+                    <div ref="checkBoxContainer" class="checkbox-container">
+                        <el-checkbox v-model="checked" />
+                        <span style="margin-left: 5px; font-size: 14px;">我已阅读并同意</span>
+                        <el-link type="primary" @click="drawer = true">&nbsp;用户协议与隐私条款&nbsp;</el-link>
+                    </div>
                 <el-text class="pwd">忘记密码？<el-link type="primary">找回密码</el-link></el-text>
             </el-card>
         </div>
