@@ -1,5 +1,6 @@
 <script setup>
-import { dealerLoginService } from '@/api/dealer'
+import { dealerLoginService } from '@/api/dealer.js'
+import { adminLoginService } from '@/api/admin.js'
 import MyFooter from '@/views/public/MyFooter.vue';
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
@@ -18,7 +19,11 @@ const loginData = ref({
     password: ''
 })
 // 勾选框DOM
-const checkBoxContainer = ref(null);
+const checkBoxContainer = ref(null)
+// 登录失败次数
+const failCount = ref(0)
+// 控制验证码遮罩的开关
+const showModal = ref(false)
 
 // 定义表单校验规则
 const rules = {
@@ -45,42 +50,71 @@ const onLogin = async () => {
         checkBoxContainer.value.classList.add('shake');
         // 结束动画后，移除shake类，以便下次再添加
         checkBoxContainer.value.addEventListener('animationend', () => {
-          checkBoxContainer.value.classList.remove('shake');
+            checkBoxContainer.value.classList.remove('shake');
         });
         return
     }
 
     if (activeName.value === 'dealer') {
-        let result = await dealerLoginService(loginData.value)
-        if (result.code == 0) {
-            alert(result.msg ? result.msg : '登录成功')
-        } else {
-            alert(result.msg ? result.msg : '登录失败')
-            // 失败次数+1
+        // 判断失败次数，如果大于等于5次需要滑块验证
+        if (failCount.value >= 5) {
+            showModal.value = true
+            return
         }
-    } else {
-        // let result = await adminLoginService(loginData.value)
-    }
 
+        let result = await dealerLoginService(loginData.value)
+        if (result.code !== 0) {
+            // 清空输入框
+            clearLoginData()
+            // 失败次数加一
+            failCount.value++
+            return
+        }
+        ElMessage.success(result.msg ? result.msg : '登录成功')
+    }
+    if (activeName.value === 'admin') {
+        // 判断失败次数，如果大于等于5次需要滑块验证
+        if (failCount.value >= 5) {
+            showModal.value = true
+            return
+        }
+        let result = await adminLoginService(loginData.value)
+        if (result.code !== 0) {
+            // 清空输入框
+            clearLoginData()
+            // 失败次数加一
+            failCount.value++
+            return
+        }
+        ElMessage.success(result.msg ? result.msg : '登录成功')
+    }
 }
 
-// const block = ref()
-
-// const onSuccess = () => {
-
-// }
-
-// const onFail = () => {
-
-// }
-
-// const onRefresh = () => {
-
-// }
-
-// const onAgain = () => {
-
-// }
+const onSuccess = async () => {
+    showModal.value = false
+    if (activeName.value === 'dealer') {
+        let result = await dealerLoginService(loginData.value)
+        if (result.code !== 0) {
+            // 清空输入框
+            clearLoginData()
+            // 失败次数加一
+            failCount.value++
+            return
+        }
+        ElMessage.success(result.msg ? result.msg : '登录成功')
+    }
+    if (activeName.value === 'admin') {
+        let result = await adminLoginService(loginData.value)
+        if (result.code !== 0) {
+            // 清空输入框
+            clearLoginData()
+            // 失败次数加一
+            failCount.value++
+            return
+        }
+        ElMessage.success(result.msg ? result.msg : '登录成功')
+    }
+}
 
 </script>
 
@@ -118,9 +152,6 @@ const onLogin = async () => {
                             </el-form-item>
 
                         </el-form>
-                        <!-- <slide-verify ref="block" slider-text="向右滑动->" accuracy=1 @again="onAgain" @success="onSuccess"
-                            @fail="onFail" @refresh="onRefresh">
-                        </slide-verify> -->
                     </el-tab-pane>
                     <el-tab-pane label="管理员登录" name="admin">
                         <el-form :rules="rules" :label-position="labelPosition" :model="loginData" class="el-form">
@@ -134,11 +165,11 @@ const onLogin = async () => {
                     </el-tab-pane>
                 </el-tabs>
                 <el-button @click="onLogin" size="large" type="primary" class="login-button">立即登录</el-button>
-                    <div ref="checkBoxContainer" class="checkbox-container">
-                        <el-checkbox v-model="checked" />
-                        <span style="margin-left: 5px; font-size: 14px;">我已阅读并同意</span>
-                        <el-link type="primary" @click="drawer = true">&nbsp;用户协议与隐私条款&nbsp;</el-link>
-                    </div>
+                <div ref="checkBoxContainer" class="checkbox-container">
+                    <el-checkbox v-model="checked" />
+                    <span style="margin-left: 5px; font-size: 14px;">我已阅读并同意</span>
+                    <el-link type="primary" @click="drawer = true">&nbsp;用户协议与隐私条款&nbsp;</el-link>
+                </div>
                 <el-text class="pwd">忘记密码？<el-link type="primary">找回密码</el-link></el-text>
             </el-card>
         </div>
@@ -155,6 +186,14 @@ const onLogin = async () => {
             </div>
         </template>
     </el-drawer>
+
+    <teleport to="body">
+        <div v-if="showModal" class="overlay">
+            <el-card class="modal">
+                <slide-verify slider-text="请拖动图片到指定位置" accuracy=2 @success="onSuccess" :w="400" :h="200"></slide-verify>
+            </el-card>
+        </div>
+    </teleport>
 </template>
 
 <style lang="scss" scoped>
@@ -186,7 +225,7 @@ const onLogin = async () => {
 
         .box-card {
             width: 400px;
-            margin: 125px 0px 0px 750px;
+            margin: 5% 0px 0px 50%;
 
             .welcome {
                 display: flex;
@@ -239,5 +278,25 @@ const onLogin = async () => {
 .a {
     text-decoration: none;
     color: #505050;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+
+    .modal {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
 }
 </style>
