@@ -6,6 +6,8 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import { useTokenStore } from '@/stores/token.js'
+const tokenStore = useTokenStore()
 import SlideVerify from 'vue3-slide-verify';
 import "vue3-slide-verify/dist/style.css"
 
@@ -73,6 +75,8 @@ const onLogin = async () => {
             return
         }
         ElMessage.success(result.msg ? result.msg : '登录成功')
+        // 把得到的token存储到pinia中
+        tokenStore.setToken(result.data.token)
         router.push('/')
     }
     if (activeName.value === 'admin') {
@@ -90,6 +94,8 @@ const onLogin = async () => {
             return
         }
         ElMessage.success(result.msg ? result.msg : '登录成功')
+        // 把得到的token存储到pinia中
+        tokenStore.setToken(result.data.token)
         router.push('/')
     }
 }
@@ -106,6 +112,8 @@ const onSuccess = async () => {
             return
         }
         ElMessage.success(result.msg ? result.msg : '登录成功')
+        // 把得到的token存储到pinia中
+        tokenStore.setToken(result.data.token)
         router.push('/')
     }
     if (activeName.value === 'admin') {
@@ -118,6 +126,8 @@ const onSuccess = async () => {
             return
         }
         ElMessage.success(result.msg ? result.msg : '登录成功')
+        // 把得到的token存储到pinia中
+        tokenStore.setToken(result.data.token)
         router.push('/')
     }
 }
@@ -305,4 +315,4 @@ const onSuccess = async () => {
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     }
 }
-</style>
+</style>@/stores/token.js

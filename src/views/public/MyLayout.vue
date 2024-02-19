@@ -90,6 +90,8 @@ const avatar = ref("汤")
                 </el-dropdown>
             </div>
         </div>
+    </div>
+    <div class="content">
         <router-view></router-view>
     </div>
     <MyFooter />
@@ -100,7 +102,7 @@ const avatar = ref("汤")
     display: flex;
 
     .el-menu-vertical-demo:not(.el-menu--collapse) {
-        width: 200px;
+        flex:0 0 200px;
         min-height: 100vh;
 
         .logo {
@@ -124,5 +126,16 @@ const avatar = ref("汤")
         }
     }
 
+}
+
+.content {
+    position: fixed;
+    width: calc(100% - 200px - 20px); // 屏幕宽度减去左侧菜单栏宽度，再两边留空
+    top: 70px;
+    left: 210px;
+    bottom: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 </style>

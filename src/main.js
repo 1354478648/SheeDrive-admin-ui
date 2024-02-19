@@ -7,9 +7,12 @@ import 'element-plus/dist/index.css'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import router from '@/router'
+import { createPinia } from 'pinia'
+const pinia = createPinia()
+import { createPersistedState } from 'pinia-persistedstate-plugin'
 
 const app = createApp(App)
-
+const persist = createPersistedState()
 app.use(ElementPlus, {
     locale: zhCn,
 })
@@ -19,5 +22,6 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 
 app.use(router)
-
+app.use(pinia)
+pinia.use(persist)
 app.mount('#app')
