@@ -99,11 +99,15 @@ const avatar = ref("汤")
 
 <style lang="scss" scoped>
 .el-menu-container {
-    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100%;
+    z-index: 2;
 
     .el-menu-vertical-demo:not(.el-menu--collapse) {
-        flex:0 0 200px;
-        min-height: 100vh;
+        min-height: 100%;
 
         .logo {
             display: flex;
@@ -113,10 +117,14 @@ const avatar = ref("汤")
     }
 
     .header {
-        flex-grow: 1;
-        background-color: #fff;
+        position: fixed;
+        top: 0;
+        left: 200px;
+        width: calc(100% - 200px);
         height: 60px;
+        background-color: #fff;
         border-bottom: #dcdfe6 solid 0.5px;
+        z-index: 2;
 
         .avatar {
             display: flex;
@@ -129,13 +137,8 @@ const avatar = ref("汤")
 }
 
 .content {
-    position: fixed;
-    width: calc(100% - 200px - 20px); // 屏幕宽度减去左侧菜单栏宽度，再两边留空
-    top: 70px;
-    left: 210px;
-    bottom: 0;
+    width: calc(100% - 200px - 20px);
+    margin: 70px 0 0 210px;
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
 }
 </style>

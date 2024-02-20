@@ -14,54 +14,19 @@ const page = ref(1)
 const size = ref(5)
 const total = ref(0)
 
+const dateTimeRange = ref([])
+
 // 管理员列表数据模型
 const admin = ref([])
-
-// {
-//         "id": 1,
-//         "name": "管理员",
-//         "username": "admin",
-//         "avatar": "https://sheedrive.oss-cn-shanghai.aliyuncs.com/images/2b5f42e2-10dc-4ae1-a003-21b7b1ac28e0.png",
-//         "phone": "13812345678",
-//         "status": 1,
-//         "isRoot": 1,
-//         "createTime": "2024-02-06 14:48:28",
-//         "updateTime": "2024-02-06 14:48:28",
-//         "deleteTime": null
-//     },
-//     {
-//         "id": 2,
-//         "name": "我是管理员",
-//         "username": "iamadmin",
-//         "avatar": "https://sheedrive.oss-cn-shanghai.aliyuncs.com/images/2b5f42e2-10dc-4ae1-a003-21b7b1ac28e0.png",
-//         "phone": "13812345678",
-//         "status": 1,
-//         "isRoot": 1,
-//         "createTime": "2024-02-06 14:48:28",
-//         "updateTime": "2024-02-06 14:48:28",
-//         "deleteTime": null
-//     },
-//     {
-//         "id": 3,
-//         "name": "管理员3",
-//         "username": "admin3",
-//         "avatar": "https://sheedrive.oss-cn-shanghai.aliyuncs.com/images/2b5f42e2-10dc-4ae1-a003-21b7b1ac28e0.png",
-//         "phone": "13812345678",
-//         "status": 1,
-//         "isRoot": 1,
-//         "createTime": "2024-02-06 14:48:28",
-//         "updateTime": "2024-02-06 14:48:28",
-//         "deleteTime": null
-//     },
 
 // 重置搜索对象
 const clearSearchData = () => {
     searchData.value = {
         username: '',
         name: '',
-        beforeDate: '',
-        afterDate: '',
+
     }
+    dateTimeRange.value = []
     page.value = 1
     size.value = 5
 }
@@ -71,8 +36,8 @@ const getAdminList = async () => {
     const params = {
         username: searchData.value.username ? searchData.value.username : null,
         name: searchData.value.name ? searchData.value.name : null,
-        beforeDate: searchData.value.beforeDate ? searchData.value.beforeDate + " 00:00:00" : null,
-        afterDate: searchData.value.afterDate ? searchData.value.afterDate + " 00:00:00" : null,
+        beforeDate: dateTimeRange.value[0] ? dateTimeRange.value[0] : null,
+        afterDate: dateTimeRange.value[1] ? dateTimeRange.value[1] : null,
         page: page.value,
         size: size.value
     }
@@ -116,9 +81,8 @@ const handleSizeChange = (newSize) => {
                     <el-input v-model="searchData.name" placeholder="请输入姓名" suffix-icon="Search" />
                 </el-form-item>
                 <el-form-item label="创建日期:" style="margin-left: 18px;">
-                    <el-date-picker v-model="searchData.beforeDate" type="datetime" value-format="YYYY-MM-DD" placeholder="请选择日期区间" />
-                    <span style="margin: 0 10px 0 10px;">-</span>
-                    <el-date-picker v-model="searchData.afterDate" type="datetime" value-format="YYYY-MM-DD" placeholder="请选择日期区间" />
+                    <el-date-picker v-model="dateTimeRange" type="datetimerange" start-placeholder="请选择时间区间"
+                        end-placeholder="请选择时间区间" value-format="YYYY-MM-DD hh:mm:ss" />
                 </el-form-item>
             </div>
             <el-form-item class="search-button">
@@ -167,7 +131,7 @@ const handleSizeChange = (newSize) => {
             </template>
         </el-table>
         <!-- 分页条 -->
-        <el-pagination v-model:current-page="page" v-model:page-size="size" :page-sizes="[1, 2, 3]" :small="small"
+        <el-pagination v-model:current-page="page" v-model:page-size="size" :page-sizes="[5, 10, 20]" :small="small"
             :disabled="disabled" :background="background" layout="total, sizes, prev, pager, next, jumper" :total="total"
             @size-change="handleSizeChange" @current-change="handleCurrentChange"
             style="margin-top: 20px; justify-content: flex-end" />
@@ -177,7 +141,7 @@ const handleSizeChange = (newSize) => {
 <style scoped>
 .el-card {
     flex: 1;
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 
     .card-header {
         display: flex;

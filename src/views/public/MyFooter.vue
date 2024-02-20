@@ -15,13 +15,10 @@
 
 <style lang="scss" scoped>
 .footer {
-    position: absolute;
-    bottom: 5px;
-    left: 0;
-    width: 100%;
     background-color: rgba(0, 0, 0, 0);
     text-align: center;
     align-items: center;
+    margin-bottom: 10px;
 
     .text {
         display: flex;
