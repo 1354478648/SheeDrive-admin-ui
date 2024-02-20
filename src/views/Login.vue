@@ -33,7 +33,6 @@ const showModal = ref(false)
 const rules = {
     username: [
         { required: true, message: '请输入用户名', trigger: 'blur' },
-        { min: 3, max: 10, message: '用户名长度在3到10个字符', trigger: 'blur' }
     ],
     password: [
         { required: true, message: '请输入密码', trigger: 'blur' },
@@ -166,7 +165,6 @@ const onSuccess = async () => {
                             <el-form-item prop="password" class="el-form-item">
                                 <el-input v-model="loginData.password" size="large" placeholder="请输入密码" show-password />
                             </el-form-item>
-
                         </el-form>
                     </el-tab-pane>
                     <el-tab-pane label="管理员登录" name="admin">
@@ -189,8 +187,9 @@ const onSuccess = async () => {
                 <el-text class="pwd">忘记密码？<el-link type="primary">找回密码</el-link></el-text>
             </el-card>
         </div>
-
-        <MyFooter />
+        <div class="footer">
+            <MyFooter />
+        </div>
     </div>
 
     <el-drawer v-model="drawer" title="用户协议与隐私条款" direction="btt">
@@ -314,5 +313,19 @@ const onSuccess = async () => {
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     }
+}
+
+.footer{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+</style>
+
+<style>
+.el-form-item__label {
+    font-size: 12px;
+    color: #505050;
 }
 </style>@/stores/token.js

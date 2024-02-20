@@ -19,7 +19,6 @@ const avatar = ref("汤")
                 <img style="width: 175px;" src="@/assets/title_SheeDrive.png" />
             </div>
             <el-divider border-style="dashed">
-                功能栏
             </el-divider>
             <el-menu-item index="/dashboard">
                 <el-icon>
@@ -108,6 +107,9 @@ const avatar = ref("汤")
 
     .el-menu-vertical-demo:not(.el-menu--collapse) {
         min-height: 100%;
+        background-color: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(10px); // 毛玻璃效果
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
         .logo {
             display: flex;
@@ -122,9 +124,11 @@ const avatar = ref("汤")
         left: 200px;
         width: calc(100% - 200px);
         height: 60px;
-        background-color: #fff;
         border-bottom: #dcdfe6 solid 0.5px;
         z-index: 2;
+        background-color: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(10px); // 毛玻璃效果
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
         .avatar {
             display: flex;

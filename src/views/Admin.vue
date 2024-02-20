@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue';
-import { adminListService } from '@/api/admin';
+import { adminListService, adminUpdateStatusService, adminAddService, adminResetPwdService } from '@/api/admin';
+import { checkPhone } from '@/utils/validate';
+import { ElMessage } from 'element-plus';
 
 // 搜索对象
 const searchData = ref({
@@ -16,8 +18,18 @@ const total = ref(0)
 
 const dateTimeRange = ref([])
 
+// 控制抽屉的开关
+const drawer = ref(false)
+
 // 管理员列表数据模型
 const admin = ref([])
+
+// 管理员添加修改对象
+const adminData = ref({
+    name: '',
+    username: '',
+    phone: '',
+})
 
 // 重置搜索对象
 const clearSearchData = () => {
@@ -61,6 +73,95 @@ const handleSizeChange = (newSize) => {
     size.value = newSize
     getAdminList()
 }
+
+// 管理员切换状态
+const onSwitchChange = async (id) => {
+    await adminUpdateStatusService(id)
+}
+
+// 定义表单校验规则
+const rules = {
+    name: [
+        {
+            required: true, message: '请输入姓名', trigger: 'blur'
+        }
+    ],
+    username: [
+        { required: true, message: '请输入用户名', trigger: 'blur' },
+        { min: 6, max: 18, message: '用户名长度在6到18个字符', trigger: 'blur' }
+    ],
+    phone: [
+        { required: true, message: '请输入手机号', trigger: 'blur' },
+        { validator: checkPhone, trigger: 'blur' },
+    ]
+}
+
+// 清空管理员添加修改对象
+const clearAdminData = () => {
+    adminData.value = {
+        name: '',
+        username: '',
+        phone: '',
+    }
+}
+
+const handleClose = () => {
+    if (adminData.value.name !== '' || adminData.value.username !== '' || adminData.value.phone !== '') {
+        ElMessageBox.confirm(
+            '需要保存草稿吗？',
+            '提示',
+            {
+                confirmButtonText: '保存',
+                cancelButtonText: '不',
+                type: 'info',
+            }
+        )
+            .then(() => {
+                drawer.value = false
+                ElMessage({
+                    type: 'success',
+                    message: '保存成功',
+                })
+            }
+            )
+            .catch(() => {
+                drawer.value = false
+                clearAdminData()
+            })
+    } else {
+        drawer.value = false
+    }
+}
+
+const addAdmin = async () => {
+    let result = await adminAddService(adminData.value)
+    ElMessage.success('添加成功, ID为 ' + result.data.id)
+    clearAdminData()
+    drawer.value = false
+    getAdminList()
+}
+
+const resetPwd = async (id, name) => {
+    ElMessageBox.confirm(
+        `确认重置 ${name} 的密码吗？`,
+        '提示',
+        {
+            confirmButtonText: '确认',
+            cancelButtonText: '不',
+            type: 'info',
+        }
+    )
+        .then(async () => {
+            await adminResetPwdService(id)
+            ElMessage({
+                type: 'success',
+                message: '重置成功',
+            })
+        }
+        )
+        .catch(() => { })
+    getAdminList()
+}
 </script>
 
 <template>
@@ -68,7 +169,7 @@ const handleSizeChange = (newSize) => {
         <template #header>
             <div class="card-header">
                 <span>管理员管理</span>
-                <el-button type="primary">添加管理员</el-button>
+                <el-button type="primary" @click="drawer = true">添加管理员</el-button>
             </div>
         </template>
         <!-- 搜索栏 -->
@@ -97,13 +198,14 @@ const handleSizeChange = (newSize) => {
             <el-table-column label="姓名" prop="name"> </el-table-column>
             <el-table-column label="头像" prop="avatar" width="100">
                 <template #default="{ row }">
-                    <el-avatar :size="40" :src="row.avatar" />
+                    <el-avatar :size="40" :src="row.avatar ? row.avatar : 'src/assets/default_avatar.jpg'" />
                 </template>
             </el-table-column>
             <el-table-column label="手机号" prop="phone"></el-table-column>
             <el-table-column label="状态" prop="status" width="100">
                 <template #default="{ row }">
-                    <el-switch v-model="row.status" :active-value="1" :inactive-value="0"></el-switch>
+                    <el-switch v-model="row.status" @change="onSwitchChange(row.id)" :disabled="row.isRoot"
+                        :active-value="1" :inactive-value="0"></el-switch>
                 </template>
             </el-table-column>
             <el-table-column label="超级管理员" prop="isRoot" width="100">
@@ -116,13 +218,14 @@ const handleSizeChange = (newSize) => {
             <el-table-column label="操作" width="200">
                 <template #default="{ row }">
                     <el-tooltip content="编辑" placement="top">
-                        <el-button icon="Edit" circle plain type="primary"></el-button>
+                        <el-button icon="Edit" circle plain type="primary" :disabled="row.isRoot"></el-button>
                     </el-tooltip>
                     <el-tooltip content="重置密码" placement="top">
-                        <el-button icon="RefreshRight" circle plain type="primary"></el-button>
+                        <el-button @click="resetPwd(row.id, row.name)" icon="RefreshRight" circle plain type="primary"
+                            :disabled="row.isRoot"></el-button>
                     </el-tooltip>
                     <el-tooltip content="删除" placement="top">
-                        <el-button icon="Delete" circle plain type="danger"></el-button>
+                        <el-button icon="Delete" circle plain type="danger" :disabled="row.isRoot"></el-button>
                     </el-tooltip>
                 </template>
             </el-table-column>
@@ -136,6 +239,28 @@ const handleSizeChange = (newSize) => {
             @size-change="handleSizeChange" @current-change="handleCurrentChange"
             style="margin-top: 20px; justify-content: flex-end" />
     </el-card>
+
+    <!-- 管理员添加&修改 -->
+    <el-drawer v-model="drawer" title="添加管理员" direction="rtl" :before-close="handleClose">
+        <el-form :rules="rules" label-width="80px" :model="adminData" class="el-form">
+            <el-form-item prop="name" label="姓名:">
+                <el-input v-model="adminData.name" size="large" placeholder="请输入姓名" clearable />
+            </el-form-item>
+            <el-form-item prop="username" label="用户名:">
+                <el-input v-model="adminData.username" size="large" placeholder="请输入用户名" clearable />
+            </el-form-item>
+            <el-form-item prop="phone" label="手机号:">
+                <el-input v-model="adminData.phone" size="large" placeholder="请输入手机号" maxlength="11" show-word-limit
+                    clearable />
+            </el-form-item>
+        </el-form>
+        <template #footer>
+            <div style="flex: auto">
+                <el-button @click="handleClose">取消</el-button>
+                <el-button type="primary" @click="addAdmin">确认</el-button>
+            </div>
+        </template>
+    </el-drawer>
 </template>
 
 <style scoped>
