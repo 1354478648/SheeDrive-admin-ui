@@ -34,13 +34,12 @@ instance.interceptors.response.use(
             return result.data;
         }
         if (result.data.code === 403) {
-            console.log('我在这')
             ElMessage.error(result.data.message ? result.data.message : '请先登录')
             router.push('/login')
         }
         //操作失败
         ElMessage.error(result.data.message ? result.data.message : '操作失败')
-        return result.data;
+        return Promise.reject(err);
     },
     err => {
         ElMessage.error('请求错误')

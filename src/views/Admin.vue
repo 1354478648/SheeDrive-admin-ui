@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { adminListService, adminUpdateStatusService, adminAddService, adminResetPwdService } from '@/api/admin';
+import { adminListService, adminUpdateStatusService, adminAddService, adminResetPwdService, adminDeleteService, adminUpdateService } from '@/api/admin';
 import { checkPhone } from '@/utils/validate';
 import { ElMessage } from 'element-plus';
 
@@ -20,6 +20,8 @@ const dateTimeRange = ref([])
 
 // 控制抽屉的开关
 const drawer = ref(false)
+// 定义变量，用于控制弹窗标题的显示
+const title = ref('')
 
 // 管理员列表数据模型
 const admin = ref([])
@@ -30,6 +32,8 @@ const adminData = ref({
     username: '',
     phone: '',
 })
+// 管理员修改id
+const adminId = ref(null)
 
 // 重置搜索对象
 const clearSearchData = () => {
@@ -82,9 +86,7 @@ const onSwitchChange = async (id) => {
 // 定义表单校验规则
 const rules = {
     name: [
-        {
-            required: true, message: '请输入姓名', trigger: 'blur'
-        }
+        { required: true, message: '请输入姓名', trigger: 'blur' }
     ],
     username: [
         { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -106,6 +108,11 @@ const clearAdminData = () => {
 }
 
 const handleClose = () => {
+    if (title.value == '修改管理员') {
+        drawer.value = false
+        clearAdminData()
+    }
+
     if (adminData.value.name !== '' || adminData.value.username !== '' || adminData.value.phone !== '') {
         ElMessageBox.confirm(
             '需要保存草稿吗？',
@@ -141,7 +148,7 @@ const addAdmin = async () => {
     getAdminList()
 }
 
-const resetPwd = async (id, name) => {
+const resetPwd = (id, name) => {
     ElMessageBox.confirm(
         `确认重置 ${name} 的密码吗？`,
         '提示',
@@ -157,9 +164,57 @@ const resetPwd = async (id, name) => {
                 type: 'success',
                 message: '重置成功',
             })
+            getAdminList()
         }
         )
         .catch(() => { })
+}
+
+const delAdmin = (id, name) => {
+    ElMessageBox.confirm(
+        `确认删除管理员 ${name} 吗？`,
+        '提示',
+        {
+            confirmButtonText: '确认',
+            cancelButtonText: '不',
+            type: 'info',
+        }
+    )
+        .then(async () => {
+            await adminDeleteService(id)
+            ElMessage({
+                type: 'success',
+                message: '删除成功',
+            })
+            getAdminList()
+        }
+        )
+        .catch(() => { })
+}
+
+const showDrawer = (row) => {
+    title.value = '修改管理员'
+    drawer.value = true
+    adminId.value = row.id
+
+    // 数据回显
+    adminData.value.name = row.name
+    adminData.value.username = row.username
+    adminData.value.phone = row.phone
+}
+
+const updateAdmin = async () => {
+    const params = {
+        id: adminId.value,
+        name: adminData.value.name,
+        username: adminData.value.username,
+        phone: adminData.value.phone,
+    }
+
+    await adminUpdateService(params)
+    ElMessage.success("修改成功")
+    clearAdminData()
+    drawer.value = false
     getAdminList()
 }
 </script>
@@ -169,7 +224,7 @@ const resetPwd = async (id, name) => {
         <template #header>
             <div class="card-header">
                 <span>管理员管理</span>
-                <el-button type="primary" @click="drawer = true">添加管理员</el-button>
+                <el-button type="primary" @click="title = '添加管理员'; drawer = true;">添加管理员</el-button>
             </div>
         </template>
         <!-- 搜索栏 -->
@@ -218,14 +273,16 @@ const resetPwd = async (id, name) => {
             <el-table-column label="操作" width="200">
                 <template #default="{ row }">
                     <el-tooltip content="编辑" placement="top">
-                        <el-button icon="Edit" circle plain type="primary" :disabled="row.isRoot"></el-button>
+                        <el-button @click="showDrawer(row);" icon="Edit" circle plain type="primary"
+                            :disabled="row.isRoot"></el-button>
                     </el-tooltip>
                     <el-tooltip content="重置密码" placement="top">
                         <el-button @click="resetPwd(row.id, row.name)" icon="RefreshRight" circle plain type="primary"
                             :disabled="row.isRoot"></el-button>
                     </el-tooltip>
                     <el-tooltip content="删除" placement="top">
-                        <el-button icon="Delete" circle plain type="danger" :disabled="row.isRoot"></el-button>
+                        <el-button @click="delAdmin(row.id, row.name)" icon="Delete" circle plain type="danger"
+                            :disabled="row.isRoot"></el-button>
                     </el-tooltip>
                 </template>
             </el-table-column>
@@ -241,7 +298,7 @@ const resetPwd = async (id, name) => {
     </el-card>
 
     <!-- 管理员添加&修改 -->
-    <el-drawer v-model="drawer" title="添加管理员" direction="rtl" :before-close="handleClose">
+    <el-drawer v-model="drawer" :title="title" direction="rtl" :before-close="handleClose">
         <el-form :rules="rules" label-width="80px" :model="adminData" class="el-form">
             <el-form-item prop="name" label="姓名:">
                 <el-input v-model="adminData.name" size="large" placeholder="请输入姓名" clearable />
@@ -257,7 +314,7 @@ const resetPwd = async (id, name) => {
         <template #footer>
             <div style="flex: auto">
                 <el-button @click="handleClose">取消</el-button>
-                <el-button type="primary" @click="addAdmin">确认</el-button>
+                <el-button type="primary" @click="title == '添加管理员' ? addAdmin() : updateAdmin();">确认</el-button>
             </div>
         </template>
     </el-drawer>
