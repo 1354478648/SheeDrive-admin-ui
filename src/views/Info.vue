@@ -5,13 +5,15 @@ const infoStore = useInfoStore()
 
 const avatar = ref(infoStore.info.avatar ? infoStore.info.avatar : 'src/assets/default_avatar.jpg')
 
+console.log(infoStore.info)
+
 // 当前登录的角色
-const role = ref('')
+const role = ref()
 
 if (infoStore.info.hasOwnProperty("describeInfo")) {
-    role.value = '经销商'
+    role.value = 1 // 经销商
 } else {
-    role.value = '管理员'
+    role.value = 0 // 管理员
 }
 
 </script>
@@ -34,7 +36,18 @@ if (infoStore.info.hasOwnProperty("describeInfo")) {
                 </template>
                 {{ infoStore.info.id }}
             </el-descriptions-item>
-            <el-descriptions-item class="cell-item">
+            <el-descriptions-item v-if="!role" class="cell-item">
+                <template #label>
+                    <div>
+                        <el-icon>
+                            <user />
+                        </el-icon>
+                        姓名
+                    </div>
+                </template>
+                {{ infoStore.info.name }}
+            </el-descriptions-item>
+            <el-descriptions-item v-if="role" class="cell-item">
                 <template #label>
                     <div>
                         <el-icon>
@@ -79,7 +92,7 @@ if (infoStore.info.hasOwnProperty("describeInfo")) {
                 <el-tag type="success" v-if="infoStore.info.status">启用</el-tag>
                 <el-tag type="danger" v-else>禁用</el-tag>
             </el-descriptions-item>
-            <el-descriptions-item class="cell-item">
+            <el-descriptions-item v-if="!role" class="cell-item">
                 <template #label>
                     <div>
                         <el-icon>
@@ -101,6 +114,17 @@ if (infoStore.info.hasOwnProperty("describeInfo")) {
                     </div>
                 </template>
                 {{ infoStore.info.phone }}
+            </el-descriptions-item>
+            <el-descriptions-item v-if="role" class="cell-item">
+                <template #label>
+                    <div>
+                        <el-icon>
+                            <Document />
+                        </el-icon>
+                        描述信息
+                    </div>
+                </template>
+                {{ infoStore.info.describeInfo }}
             </el-descriptions-item>
             <el-descriptions-item class="cell-item">
                 <template #label>
@@ -124,6 +148,18 @@ if (infoStore.info.hasOwnProperty("describeInfo")) {
                 </template>
                 {{ infoStore.info.updateTime }}
             </el-descriptions-item>
+            <el-descriptions-item class="cell-item">
+                <template #label>
+                    <div>
+                        <el-icon>
+                            <Location />
+                        </el-icon>
+                        地址
+                    </div>
+                </template>
+                {{ infoStore.info.address.Province + " " + infoStore.info.address.City + " "
+                    + infoStore.info.address.District + " " + infoStore.info.address.Detail }}
+            </el-descriptions-item>
         </el-descriptions>
     </el-card>
 </template>
@@ -137,5 +173,4 @@ if (infoStore.info.hasOwnProperty("describeInfo")) {
         display: flex;
         align-items: center;
     }
-}
-</style>
+}</style>

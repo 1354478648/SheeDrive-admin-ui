@@ -142,8 +142,8 @@ const handleCommand = (command) => {
 
     .el-menu-vertical-demo:not(.el-menu--collapse) {
         min-height: 100%;
-        background-color: rgba(255, 255, 255, 0.5);
-        backdrop-filter: blur(10px); // 毛玻璃效果
+        // background-color: rgba(255, 255, 255, 0.5);
+        // backdrop-filter: blur(10px); // 毛玻璃效果
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
         .logo {
