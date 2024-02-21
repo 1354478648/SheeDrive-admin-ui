@@ -119,7 +119,7 @@ const handleClose = () => {
             '提示',
             {
                 confirmButtonText: '保存',
-                cancelButtonText: '不',
+                cancelButtonText: '取消',
                 type: 'info',
             }
         )
@@ -154,8 +154,8 @@ const resetPwd = (id, name) => {
         '提示',
         {
             confirmButtonText: '确认',
-            cancelButtonText: '不',
-            type: 'info',
+            cancelButtonText: '取消',
+            type: 'warning',
         }
     )
         .then(async () => {
@@ -176,8 +176,8 @@ const delAdmin = (id, name) => {
         '提示',
         {
             confirmButtonText: '确认',
-            cancelButtonText: '不',
-            type: 'info',
+            cancelButtonText: '取消',
+            type: 'warning',
         }
     )
         .then(async () => {

@@ -1,14 +1,49 @@
 <script setup>
 import MyFooter from '@/views/public/MyFooter.vue';
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import {
     Document,
     Menu as IconMenu,
-    Location,
     Setting,
 } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { useInfoStore } from '@/stores/info';
+import { useTokenStore } from '@/stores/token.js'
+const infoStore = useInfoStore()
+const tokenStore = useTokenStore()
+const router = useRouter()
 
-const avatar = ref("汤")
+const avatar = ref(infoStore.info.avatar ? infoStore.info.avatar : 'src/assets/default_avatar.jpg')
+
+const handleCommand = (command) => {
+    //判断指令
+    if (command === 'logout') {
+        // 提示用户确认框
+        ElMessageBox.confirm(
+            '确认退出？',
+            '提示',
+            {
+                confirmButtonText: '确认',
+                cancelButtonText: '取消',
+                type: 'warning',
+            })
+            //退出登录
+            .then(() => {
+                //清空pinia中存储的token及个人信息
+                tokenStore.removeToken()
+                infoStore.removeInfo()
+                
+                //跳转到登录页面
+                router.push('/login')
+                ElMessage.success('退出成功')
+            })
+            .catch(() => { })
+    } else {
+        //路由跳转
+        router.push('/info')
+    }
+}
 
 </script>
 
@@ -78,12 +113,12 @@ const avatar = ref("汤")
         </el-menu>
         <div class="header">
             <div class="avatar">
-                <el-dropdown>
-                    <el-avatar> {{ avatar }} </el-avatar>
+                <el-dropdown @command="handleCommand">
+                    <el-avatar :src="avatar" />
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <el-dropdown-item>个人资料</el-dropdown-item>
-                            <el-dropdown-item>退出登录</el-dropdown-item>
+                            <el-dropdown-item command="info">个人资料</el-dropdown-item>
+                            <el-dropdown-item command="logout">退出登录</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>

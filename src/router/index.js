@@ -13,6 +13,7 @@ import OrderVue from '@/views/Order.vue'
 import CommentVue from '@/views/Comment.vue'
 import UpdateAvatarVue from '@/views/UpdateAvatar.vue'
 import UpdatePasswordVue from '@/views/UpdatePassword.vue'
+import InfoVue from '@/views/Info.vue'
 
 // 定义路由关系
 const routes = [
@@ -31,6 +32,7 @@ const routes = [
             { path: '/comment', component: CommentVue },
             { path: '/updateAvatar', component: UpdateAvatarVue },
             { path: '/updatePassword', component: UpdatePasswordVue },
+            { path:'/info', component: InfoVue}
         ],
     },
 ]

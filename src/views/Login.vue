@@ -7,7 +7,9 @@ const router = useRouter()
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useTokenStore } from '@/stores/token.js'
+import { useInfoStore } from '@/stores/info';
 const tokenStore = useTokenStore()
+const infoStore = useInfoStore()
 import SlideVerify from 'vue3-slide-verify';
 import "vue3-slide-verify/dist/style.css"
 
@@ -76,6 +78,8 @@ const onLogin = async () => {
         ElMessage.success(result.msg ? result.msg : '登录成功')
         // 把得到的token存储到pinia中
         tokenStore.setToken(result.data.token)
+        // 把得到的用户信息存储到pinia中
+        infoStore.setInfo(result.data.dealer_info)
         router.push('/')
     }
     if (activeName.value === 'admin') {
@@ -95,6 +99,8 @@ const onLogin = async () => {
         ElMessage.success(result.msg ? result.msg : '登录成功')
         // 把得到的token存储到pinia中
         tokenStore.setToken(result.data.token)
+        // 把得到的用户信息存储到pinia中
+        infoStore.setInfo(result.data.admin_info)
         router.push('/')
     }
 }
@@ -113,6 +119,8 @@ const onSuccess = async () => {
         ElMessage.success(result.msg ? result.msg : '登录成功')
         // 把得到的token存储到pinia中
         tokenStore.setToken(result.data.token)
+        // 把得到的用户信息存储到pinia中
+        infoStore.setInfo(result.data.dealer_info)
         router.push('/')
     }
     if (activeName.value === 'admin') {
@@ -127,6 +135,8 @@ const onSuccess = async () => {
         ElMessage.success(result.msg ? result.msg : '登录成功')
         // 把得到的token存储到pinia中
         tokenStore.setToken(result.data.token)
+        // 把得到的用户信息存储到pinia中
+        infoStore.setInfo(result.data.admin_info)
         router.push('/')
     }
 }
@@ -315,7 +325,7 @@ const onSuccess = async () => {
     }
 }
 
-.footer{
+.footer {
     position: fixed;
     bottom: 0;
     left: 0;

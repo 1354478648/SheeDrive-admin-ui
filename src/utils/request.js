@@ -39,7 +39,7 @@ instance.interceptors.response.use(
         }
         //操作失败
         ElMessage.error(result.data.message ? result.data.message : '操作失败')
-        return Promise.reject(err);
+        return Promise.reject(result.data.message);
     },
     err => {
         ElMessage.error('请求错误')
