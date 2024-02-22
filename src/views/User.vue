@@ -90,9 +90,9 @@ const onSwitchChange = async (id) => {
     await userUpdateStatusService(id)
 }
 
-const delUser = (id, name) => {
+const delUser = (row) => {
     ElMessageBox.confirm(
-        `确认删除用户 ${name} 吗？`,
+        `确认删除用户 ${row.lastName}${row.firstName} 吗？`,
         '提示',
         {
             confirmButtonText: '确认',
@@ -101,7 +101,7 @@ const delUser = (id, name) => {
         }
     )
         .then(async () => {
-            await userDeleteService(id)
+            await userDeleteService(row.id)
             ElMessage({
                 type: 'success',
                 message: '删除成功',
@@ -173,7 +173,7 @@ const delUser = (id, name) => {
             <el-table-column label="操作">
                 <template #default="{ row }">
                     <el-tooltip content="删除" placement="top">
-                        <el-button @click="delUser(row.id, row.name)" icon="Delete" circle plain type="danger"></el-button>
+                        <el-button @click="delUser(row)" icon="Delete" circle plain type="danger"></el-button>
                     </el-tooltip>
                 </template>
             </el-table-column>
