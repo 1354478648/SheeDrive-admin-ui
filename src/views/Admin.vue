@@ -67,6 +67,10 @@ const getAdminList = async () => {
 }
 getAdminList()
 
+const filterStatus = (value, row) => {
+  return row.status === value
+}
+
 // 当前页码发生变化时，调用此函数
 const handleCurrentChange = (newPage) => {
     page.value = newPage
@@ -228,7 +232,7 @@ const updateAdmin = async () => {
             </div>
         </template>
         <!-- 搜索栏 -->
-        <el-form class="search-container" :model="searchData">
+        <el-form class="search-container" :model="searchData" >
             <div class="search-input">
                 <el-form-item label="用户名:">
                     <el-input v-model="searchData.username" placeholder="请输入用户名" suffix-icon="Search" />
@@ -247,8 +251,8 @@ const updateAdmin = async () => {
             </el-form-item>
         </el-form>
         <!-- 管理员列表 -->
-        <el-table :data="admin" style="width: 100%">
-            <el-table-column label="ID" prop="id" width="100"></el-table-column>
+        <el-table :data="admin" style="width: 100%" stripe >
+            <el-table-column label="ID" sortable prop="id" width="100"></el-table-column>
             <el-table-column label="用户名" prop="username"></el-table-column>
             <el-table-column label="姓名" prop="name"> </el-table-column>
             <el-table-column label="头像" prop="avatar" width="100">
@@ -257,7 +261,10 @@ const updateAdmin = async () => {
                 </template>
             </el-table-column>
             <el-table-column label="手机号" prop="phone"></el-table-column>
-            <el-table-column label="状态" prop="status" width="100">
+            <el-table-column label="状态" prop="status" width="100" :filters="[
+                { text: '启用', value: 1 },
+                { text: '禁用', value: 0 },
+            ]" :filter-method="filterStatus" filter-placement="bottom-end">
                 <template #default="{ row }">
                     <el-switch v-model="row.status" @change="onSwitchChange(row.id)" :disabled="row.isRoot"
                         :active-value="1" :inactive-value="0"></el-switch>
@@ -269,7 +276,7 @@ const updateAdmin = async () => {
                     <el-tag type="danger" v-else>否</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="创建时间" prop="createTime" width="200"></el-table-column>
+            <el-table-column label="创建时间" sortable prop="createTime" width="200"></el-table-column>
             <el-table-column label="操作" width="200">
                 <template #default="{ row }">
                     <el-tooltip content="编辑" placement="top">
