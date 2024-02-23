@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 import { useInfoStore } from '@/stores/info';
 const infoStore = useInfoStore()
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const avatar = ref(infoStore.info.avatar ? infoStore.info.avatar : 'src/assets/default_avatar.jpg')
 
@@ -16,14 +18,21 @@ if (infoStore.info.hasOwnProperty("describeInfo")) {
     role.value = 0 // 管理员
 }
 
+const toUpdateAvatar = () => {
+    router.push('/updateAvatar')
+}
+
+const toUpdatePwd = ()=>{
+    router.push('/updatePassword')
+}
 </script>
 
 <template>
     <el-card class="el-card">
         <el-descriptions title="个人资料" :column="3" size="large" border>
             <template #extra>
-                <el-button type="primary">修改头像</el-button>
-                <el-button type="primary">修改密码</el-button>
+                <el-button type="primary" @click="toUpdateAvatar">修改头像</el-button>
+                <el-button type="primary" @click="toUpdatePwd">修改密码</el-button>
             </template>
             <el-descriptions-item class="cell-item">
                 <template #label>

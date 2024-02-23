@@ -35,3 +35,13 @@ export const dealerDeleteService = (id) => {
 export const dealerUpdateService = (dealerData) => {
     return request.put("/dealer/update", dealerData);    
 }
+
+// 经销商修改头像
+export const dealerUpdateAvatarService = (params) => {
+    return request.put('/dealer/updateAvatar', params)
+}
+
+// 经销商修改密码
+export const dealerUpdatePasswordService = (params) => {
+    return request.put('/dealer/updatePassword', params)
+}

@@ -36,3 +36,13 @@ export const adminDeleteService = (id) => {
 export const adminUpdateService = (adminData) => {
     return request.put("/admin/update", adminData);    
 }
+
+// 管理员修改头像
+export const adminUpdateAvatarService = (params) => {
+    return request.put('/admin/updateAvatar', params)
+}
+
+// 管理员修改密码
+export const adminUpdatePasswordService = (params) => {
+    return request.put('/admin/updatePassword', params)
+}
