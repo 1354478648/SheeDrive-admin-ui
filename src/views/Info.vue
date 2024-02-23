@@ -157,7 +157,7 @@ const toUpdatePwd = ()=>{
                 </template>
                 {{ infoStore.info.updateTime }}
             </el-descriptions-item>
-            <el-descriptions-item class="cell-item">
+            <el-descriptions-item v-if="role" class="cell-item">
                 <template #label>
                     <div>
                         <el-icon>

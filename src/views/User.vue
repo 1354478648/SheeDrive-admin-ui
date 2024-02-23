@@ -49,7 +49,6 @@ const getUserList = async () => {
 
     let result = await userListService(params)
 
-    console.log('----------')
     console.log(result.data.List)
 
     // 将ID转为字符串，避免失去精度
@@ -59,7 +58,6 @@ const getUserList = async () => {
             id: user.id.toString() // 转换为字符串
         };
     });
-    console.log('----------')
     console.log(modifiedUserList)
 
 
