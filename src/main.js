@@ -12,6 +12,8 @@ const pinia = createPinia()
 import { createPersistedState } from 'pinia-persistedstate-plugin'
 
 const app = createApp(App)
+// 取消控制台中的警告
+app.config.warnHandler = () => null
 const persist = createPersistedState()
 app.use(ElementPlus, {
     locale: zhCn,

@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { userListService, userUpdateStatusService, userDeleteService } from '@/api/user';
-
+import { maskStr } from '@/utils/other';
 
 // 搜索对象
 const searchData = ref({
@@ -109,6 +109,8 @@ const delUser = (row) => {
         )
         .catch(() => { })
 }
+
+const isHovering = ref(false)
 </script>
 
 <template>
@@ -138,7 +140,8 @@ const delUser = (row) => {
             </el-form-item>
         </el-form>
         <!-- 用户列表 -->
-        <el-table :data="user" style="width: 100%" stripe>
+        <el-table :data="user" style="width: 100%" stripe @cell-mouse-enter="isHovering = true;"
+            @cell-mouse-leave="isHovering = false;">
             <el-table-column label="ID" fixed sortable prop="id" width="200"></el-table-column>
             <el-table-column label="用户名" fixed prop="username" width="150"></el-table-column>
             <el-table-column label="姓名" fixed prop="name" width="100">
@@ -151,8 +154,16 @@ const delUser = (row) => {
                     <el-avatar :size="40" :src="row.avatar ? row.avatar : 'src/assets/default_avatar.jpg'" />
                 </template>
             </el-table-column>
-            <el-table-column label="手机号" prop="phone" width="150"></el-table-column>
-            <el-table-column label="身份证号" prop="idNumber" width="200"></el-table-column>
+            <el-table-column label="手机号" width="150">
+                <template #default="{ row }">
+                    {{ isHovering ? row.phone : maskStr(row.phone, 4) }}
+                </template>
+            </el-table-column>
+            <el-table-column label="身份证号" width="200">
+                <template #default="{ row }">
+                    {{ isHovering ? row.idNumber : maskStr(row.idNumber, 8) }}
+                </template>
+            </el-table-column>
             <el-table-column label="性别" prop="sex" width="100"></el-table-column>
             <el-table-column label="生日" width="150"> <template #default="{ row }">
                     {{ row.birthday.substring(0, 10) }}
