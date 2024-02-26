@@ -33,7 +33,7 @@ const handleCommand = (command) => {
                 //清空pinia中存储的token及个人信息
                 tokenStore.removeToken()
                 infoStore.removeInfo()
-                
+
                 //跳转到登录页面
                 router.push('/login')
                 ElMessage.success('退出成功')
@@ -84,6 +84,12 @@ const handleCommand = (command) => {
                     <Van />
                 </el-icon>
                 <template #title>汽车管理</template>
+            </el-menu-item>
+            <el-menu-item index="/stock">
+                <el-icon>
+                    <Collection />
+                </el-icon>
+                <template #title>库存管理</template>
             </el-menu-item>
             <el-menu-item index="/order">
                 <el-icon>

@@ -9,6 +9,7 @@ import AdminVue from '@/views/Admin.vue'
 import DealerVue from '@/views/Dealer.vue'
 import UserVue from '@/views/User.vue'
 import CarDetailVue from '@/views/CarDetail.vue'
+import StockVue from '@/views/Stock.vue'
 import OrderVue from '@/views/Order.vue'
 import CommentVue from '@/views/Comment.vue'
 import UpdateAvatarVue from '@/views/UpdateAvatar.vue'
@@ -28,6 +29,7 @@ const routes = [
             { path: '/dealer', component: DealerVue },
             { path: '/user', component: UserVue },
             { path: '/carDetail', component: CarDetailVue },
+            { path: '/stock', component: StockVue },
             { path: '/order', component: OrderVue },
             { path: '/comment', component: CommentVue },
             { path: '/updateAvatar', component: UpdateAvatarVue },
