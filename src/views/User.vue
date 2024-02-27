@@ -140,9 +140,9 @@ const isHovering = ref(false)
         <!-- 用户列表 -->
         <el-table :data="user" style="width: 100%" stripe @cell-mouse-enter="isHovering = true;"
             @cell-mouse-leave="isHovering = false;">
-            <el-table-column label="ID" fixed sortable prop="id" width="200"></el-table-column>
-            <el-table-column label="用户名" fixed prop="username" width="150"></el-table-column>
-            <el-table-column label="姓名" fixed prop="name" width="100">
+            <el-table-column label="ID" sortable prop="id" width="200"></el-table-column>
+            <el-table-column label="用户名" prop="username" width="150"></el-table-column>
+            <el-table-column label="姓名" prop="name" width="100">
                 <template #default="{ row }">
                     {{ row.lastName + row.firstName }}
                 </template>

@@ -4,7 +4,8 @@ import { stockListService, stockAddService, stockDeleteService } from '@/api/sto
 
 // 搜索对象
 const searchData = ref({
-    dealerName: ''
+    dealerName: '',
+    carName: ''
 })
 
 const page = ref(1)
@@ -17,7 +18,8 @@ const stock = ref([])
 // 重置搜索对象
 const clearSearchData = () => {
     searchData.value = {
-        dealerName: ''
+        dealerName: '',
+        carName: ''
     }
     page.value = 1
     size.value = 5
@@ -27,6 +29,7 @@ const clearSearchData = () => {
 const getStockList = async () => {
     const params = {
         dealerName: searchData.value.dealerName ? searchData.value.dealerName : null,
+        carName: searchData.value.carName ? searchData.value.carName : null,
         page: page.value,
         size: size.value
     }
@@ -50,6 +53,28 @@ const handleSizeChange = (newSize) => {
     size.value = newSize
     getStockList()
 }
+
+const delStock = (row) => {
+    ElMessageBox.confirm(
+        `确认删除这条库存记录吗？`,
+        '提示',
+        {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }
+    )
+        .then(async () => {
+            await stockDeleteService(row.id)
+            ElMessage({
+                type: 'success',
+                message: '删除成功',
+            })
+            getStockList()
+        }
+        )
+        .catch(() => { })
+}
 </script>
 
 <template>
@@ -64,6 +89,9 @@ const handleSizeChange = (newSize) => {
             <div class="search-input">
                 <el-form-item label="经销商名称:">
                     <el-input v-model="searchData.dealerName" placeholder="请输入经销商名称" suffix-icon="Search" />
+                </el-form-item>
+                <el-form-item label="汽车名称:" style="margin-left:18px;">
+                    <el-input v-model="searchData.carName" placeholder="请输入汽车名称" suffix-icon="Search" />
                 </el-form-item>
             </div>
             <el-form-item class="search-button">
@@ -91,7 +119,7 @@ const handleSizeChange = (newSize) => {
             </el-table-column>
             <el-table-column label="在库汽车" width="300">
                 <template #default="{ row }">
-                    {{ row.carDetailInfo.year + ' ' + row.carDetailInfo.brand + row.carDetailInfo.model +' ' + 
+                    {{ row.carDetailInfo.year + ' ' + row.carDetailInfo.brand + row.carDetailInfo.model + ' ' +
                         row.carDetailInfo.version }}
 
                 </template>
@@ -106,7 +134,7 @@ const handleSizeChange = (newSize) => {
             <el-table-column label="操作" width="200">
                 <template #default="{ row }">
                     <el-tooltip content="删除" placement="top">
-                        <el-button @click="delStock(row.id, row.name)" icon="Delete" circle plain type="danger"
+                        <el-button @click="delStock(row)" icon="Delete" circle plain type="danger"
                             :disabled="row.isRoot"></el-button>
                     </el-tooltip>
                 </template>
@@ -121,28 +149,6 @@ const handleSizeChange = (newSize) => {
             @size-change="handleSizeChange" @current-change="handleCurrentChange"
             style="margin-top: 20px; justify-content: flex-end" />
     </el-card>
-
-    <!-- 库存添加&修改 -->
-    <el-drawer v-model="drawer" :title="title" direction="rtl" :before-close="handleClose">
-        <el-form :rules="rules" label-width="80px" :model="stockData" class="el-form">
-            <el-form-item prop="name" label="姓名:">
-                <el-input v-model="stockData.name" size="large" placeholder="请输入姓名" clearable />
-            </el-form-item>
-            <el-form-item prop="username" label="用户名:">
-                <el-input v-model="stockData.username" size="large" placeholder="请输入用户名" clearable />
-            </el-form-item>
-            <el-form-item prop="phone" label="手机号:">
-                <el-input v-model="stockData.phone" size="large" placeholder="请输入手机号" maxlength="11" show-word-limit
-                    clearable />
-            </el-form-item>
-        </el-form>
-        <template #footer>
-            <div style="flex: auto">
-                <el-button @click="handleClose">取消</el-button>
-                <el-button type="primary" @click="title == '添加库存' ? addStock() : updateStock();">确认</el-button>
-            </div>
-        </template>
-    </el-drawer>
 </template>
 
 <style scoped>

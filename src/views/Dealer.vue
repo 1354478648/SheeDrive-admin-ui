@@ -274,9 +274,9 @@ const updateDealer = async () => {
         </el-form>
         <!-- 经销商列表 -->
         <el-table :data="dealer" style="width: 100%">
-            <el-table-column label="ID" fixed sortable prop="id" width="100"></el-table-column>
-            <el-table-column label="用户名" fixed  prop="username" width="150"></el-table-column>
-            <el-table-column label="名字" fixed  prop="name" width="200"> </el-table-column>
+            <el-table-column label="ID" sortable prop="id" width="100"></el-table-column>
+            <el-table-column label="用户名" prop="username" width="150"></el-table-column>
+            <el-table-column label="名字" prop="name" width="200"> </el-table-column>
             <el-table-column label="头像" prop="avatar" width="100">
                 <template #default="{ row }">
                     <el-avatar :size="40" :src="row.avatar ? row.avatar : 'src/assets/default_avatar.jpg'" />
