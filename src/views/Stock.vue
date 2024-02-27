@@ -1,6 +1,12 @@
 <script setup>
 import { ref } from 'vue';
 import { stockListService, stockAddService, stockDeleteService } from '@/api/stock';
+import { useInfoStore } from '@/stores/info';
+const infoStore = useInfoStore()
+import { checkRole } from '@/utils/other.js'
+
+// 当前登录的角色
+const role = ref(checkRole(infoStore.info))
 
 // 搜索对象
 const searchData = ref({
@@ -27,6 +33,10 @@ const clearSearchData = () => {
 
 // 获取库存分页数据
 const getStockList = async () => {
+    if(role.value){
+        searchData.value.dealerName = infoStore.info.name
+    }
+
     const params = {
         dealerName: searchData.value.dealerName ? searchData.value.dealerName : null,
         carName: searchData.value.carName ? searchData.value.carName : null,
@@ -87,7 +97,7 @@ const delStock = (row) => {
         <!-- 搜索栏 -->
         <el-form class="search-container" :model="searchData">
             <div class="search-input">
-                <el-form-item label="经销商名称:">
+                <el-form-item label="经销商名称:" v-if="!role">
                     <el-input v-model="searchData.dealerName" placeholder="请输入经销商名称" suffix-icon="Search" />
                 </el-form-item>
                 <el-form-item label="汽车名称:" style="margin-left:18px;">

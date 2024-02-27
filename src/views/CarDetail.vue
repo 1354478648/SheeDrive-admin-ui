@@ -1,9 +1,16 @@
 <script setup>
 import { ref } from 'vue';
 import { carDetailListService, carDetailAddService, carDetailDeleteService, carDetailUpdateService } from '@/api/cardetail';
+import { stockAddService } from '@/api/stock';
+import { useInfoStore } from '@/stores/info';
+const infoStore = useInfoStore()
 import { useTokenStore } from '@/stores/token.js'
 const tokenStore = useTokenStore()
 import { ElMessage } from 'element-plus';
+import { checkRole } from '@/utils/other.js'
+
+// 当前登录的角色
+const role = ref(checkRole(infoStore.info))
 
 // 搜索对象
 const searchData = ref({
@@ -304,6 +311,17 @@ const updateCarDetail = async () => {
     drawer.value = false
     getCarDetailList()
 }
+
+// 添加库存
+const addStock = async (row) => {
+    const params = {
+        carId: row.id,
+        dealerId: infoStore.info.id,
+    }
+
+    await stockAddService(params)
+    ElMessage.success("添加成功")
+}
 </script>
 
 <template>
@@ -373,10 +391,17 @@ const updateCarDetail = async () => {
         <!-- 汽车信息列表 -->
         <el-table :data="cardetail" style="width: 100%" stripe @cell-mouse-enter="handleCellMouseEnter">
             <el-table-column label="ID" sortable prop="id" width="100"></el-table-column>
+            <el-table-column label="操作" width="100" v-if="role">
+                <template #default="{ row }">
+                    <el-tooltip content="添加至库存" placement="top">
+                        <el-button @click="addStock(row)" icon="Upload" plain type="primary"></el-button>
+                    </el-tooltip>
+                </template>
+            </el-table-column>
             <el-table-column label="年份" prop="year" width="100"></el-table-column>
             <el-table-column label="品牌" prop="brand" width="100"></el-table-column>
             <el-table-column label="型号" prop="model" width="100"></el-table-column>
-            <el-table-column label="版本" prop="version" width="200" > </el-table-column>
+            <el-table-column label="版本" prop="version" width="200"> </el-table-column>
             <el-table-column label="图片" prop="image" width="250">
                 <template #default="scope">
                     <el-image style="width: 200px; height:150px;"
@@ -431,7 +456,7 @@ const updateCarDetail = async () => {
                 </template>
             </el-table-column>
             <!-- <el-table-column label="创建时间" sortable prop="createTime" width="200"></el-table-column> -->
-            <el-table-column label="操作" width="200">
+            <el-table-column label="操作" width="200" v-if="!role">
                 <template #default="{ row }">
                     <el-tooltip content="编辑" placement="top">
                         <el-button @click="showDrawer(row);" icon="Edit" circle plain type="primary"></el-button>

@@ -8,17 +8,12 @@ import { ElMessage } from 'element-plus';
 const tokenStore = useTokenStore()
 import { dealerUpdateAvatarService } from '@/api/dealer.js'
 import { adminUpdateAvatarService } from '@/api/admin.js'
+import { checkRole } from '@/utils/other.js'
 
 const imgUrl = ref(infoStore.info.avatar ? infoStore.info.avatar : 'src/assets/default_avatar.jpg')
 
 // 当前登录的角色
-const role = ref()
-
-if (infoStore.info.hasOwnProperty("describeInfo")) {
-    role.value = 1 // 经销商
-} else {
-    role.value = 0 // 管理员
-}
+const role = ref(checkRole(infoStore.info))
 
 //获取el-upload的DOM
 const uploadRef = ref()
@@ -111,8 +106,8 @@ const updateAvatar = async () => {
         }
     }
 
-    .button-container{
-        margin-top:20px;
+    .button-container {
+        margin-top: 20px;
     }
 }
 </style>

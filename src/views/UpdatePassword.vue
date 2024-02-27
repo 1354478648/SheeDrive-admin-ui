@@ -4,15 +4,10 @@ import { useInfoStore } from '@/stores/info.js'
 const infoStore = useInfoStore()
 import { dealerUpdatePasswordService } from '@/api/dealer.js'
 import { adminUpdatePasswordService } from '@/api/admin.js'
+import { checkRole } from '@/utils/other.js'
 
 // 当前登录的角色
-const role = ref()
-
-if (infoStore.info.hasOwnProperty("describeInfo")) {
-    role.value = 1 // 经销商
-} else {
-    role.value = 0 // 管理员
-}
+const role = ref(checkRole(infoStore.info))
 
 const pwd = ref({
     oPwd: '',

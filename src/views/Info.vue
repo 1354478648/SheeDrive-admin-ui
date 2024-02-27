@@ -4,19 +4,12 @@ import { useInfoStore } from '@/stores/info';
 const infoStore = useInfoStore()
 import { useRouter } from 'vue-router'
 const router = useRouter()
+import { checkRole } from '@/utils/other.js'
 
 const avatar = ref(infoStore.info.avatar ? infoStore.info.avatar : 'src/assets/default_avatar.jpg')
 
-console.log(infoStore.info)
-
 // 当前登录的角色
-const role = ref()
-
-if (infoStore.info.hasOwnProperty("describeInfo")) {
-    role.value = 1 // 经销商
-} else {
-    role.value = 0 // 管理员
-}
+const role = ref(checkRole(infoStore.info))
 
 const toUpdateAvatar = () => {
     router.push('/updateAvatar')

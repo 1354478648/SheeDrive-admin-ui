@@ -8,3 +8,12 @@ export function maskStr(str, visibleChars) {
     masked += str.slice(startLength + visibleChars);
     return masked;
 }
+
+// 权限控制
+export function checkRole(info) {
+    if (info.hasOwnProperty("describeInfo")) {
+        return 1 // 经销商
+    } else {
+        return 0 // 管理员
+    }
+}

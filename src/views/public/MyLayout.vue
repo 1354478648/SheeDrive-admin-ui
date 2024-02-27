@@ -13,6 +13,10 @@ import { useTokenStore } from '@/stores/token.js'
 const infoStore = useInfoStore()
 const tokenStore = useTokenStore()
 const router = useRouter()
+import { checkRole } from '@/utils/other.js'
+
+// 当前登录的角色
+const role = ref(checkRole(infoStore.info))
 
 const avatar = ref(infoStore.info.avatar ? infoStore.info.avatar : 'src/assets/default_avatar.jpg')
 
@@ -55,25 +59,25 @@ const handleCommand = (command) => {
             </div>
             <el-divider border-style="dashed">
             </el-divider>
-            <el-menu-item index="/dashboard">
+            <el-menu-item index="/dashboard" v-if="role">
                 <el-icon>
                     <Odometer />
                 </el-icon>
                 <template #title>仪表盘</template>
             </el-menu-item>
-            <el-menu-item index="/admin">
+            <el-menu-item index="/admin" v-if="!role">
                 <el-icon>
                     <CoffeeCup />
                 </el-icon>
                 <template #title>管理员管理</template>
             </el-menu-item>
-            <el-menu-item index="/dealer">
+            <el-menu-item index="/dealer" v-if="!role">
                 <el-icon>
                     <OfficeBuilding />
                 </el-icon>
                 <template #title>经销商管理</template>
             </el-menu-item>
-            <el-menu-item index="/user">
+            <el-menu-item index="/user" v-if="!role">
                 <el-icon>
                     <User />
                 </el-icon>
