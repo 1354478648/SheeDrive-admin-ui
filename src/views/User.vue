@@ -49,8 +49,6 @@ const getUserList = async () => {
 
     let result = await userListService(params)
 
-    console.log(result.data.List)
-
     // 将ID转为字符串，避免失去精度
     const modifiedUserList = result.data.List.map(user => {
         return {

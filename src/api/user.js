@@ -4,8 +4,6 @@ import { suffix_query } from '@/utils/url'
 // 用户列表查询
 export const userListService = (params) => {
     const queryString = suffix_query(params);
-    console.log('0000000000')
-    console.log(request.get(`/user/list${queryString}`))
     return request.get(`/user/list${queryString}`);
 }
 
