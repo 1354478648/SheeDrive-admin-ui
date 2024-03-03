@@ -46,3 +46,8 @@ export const adminUpdateAvatarService = (params) => {
 export const adminUpdatePasswordService = (params) => {
     return request.put('/admin/updatePassword', params)
 }
+
+// 管理员通过手机号修改密码
+export const adminUpdatePasswordByPhoneService = (params) => {
+    return request.put('/admin/updatePasswordByPhone', params)
+}

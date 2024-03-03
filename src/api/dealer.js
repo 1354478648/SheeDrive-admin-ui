@@ -45,3 +45,8 @@ export const dealerUpdateAvatarService = (params) => {
 export const dealerUpdatePasswordService = (params) => {
     return request.put('/dealer/updatePassword', params)
 }
+
+// 经销商通过手机号修改密码
+export const dealerUpdatePasswordByPhoneService = (params) => {
+    return request.put('/dealer/updatePasswordByPhone', params)
+}
