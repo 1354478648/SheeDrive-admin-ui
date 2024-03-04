@@ -281,24 +281,20 @@ const handleUpdatePwd = async () => {
                         <el-tab-pane label="经销商登录" name="dealer">
                             <el-form :rules="rules" :label-position="labelPosition" :model="loginData" class="el-form">
                                 <el-form-item prop="username" class="el-form-item">
-                                    <el-input v-model="loginData.username" size="large" placeholder="请输入用户名"
-                                        clearable />
+                                    <el-input v-model="loginData.username" size="large" placeholder="请输入用户名" clearable />
                                 </el-form-item>
                                 <el-form-item prop="password" class="el-form-item">
-                                    <el-input v-model="loginData.password" size="large" placeholder="请输入密码"
-                                        show-password />
+                                    <el-input v-model="loginData.password" size="large" placeholder="请输入密码" show-password />
                                 </el-form-item>
                             </el-form>
                         </el-tab-pane>
                         <el-tab-pane label="管理员登录" name="admin">
                             <el-form :rules="rules" :label-position="labelPosition" :model="loginData" class="el-form">
                                 <el-form-item prop="username" class="el-form-item">
-                                    <el-input v-model="loginData.username" size="large" placeholder="请输入用户名"
-                                        clearable />
+                                    <el-input v-model="loginData.username" size="large" placeholder="请输入用户名" clearable />
                                 </el-form-item>
                                 <el-form-item prop="password" class="el-form-item">
-                                    <el-input v-model="loginData.password" size="large" placeholder="请输入密码"
-                                        show-password />
+                                    <el-input v-model="loginData.password" size="large" placeholder="请输入密码" show-password />
                                 </el-form-item>
                             </el-form>
                         </el-tab-pane>
@@ -377,8 +373,7 @@ const handleUpdatePwd = async () => {
     <teleport to="body">
         <div v-if="showModal1" class="overlay">
             <el-card class="modal">
-                <slide-verify slider-text="请拖动图片到指定位置" accuracy=2 @success="onSuccess1" :w="400"
-                    :h="200"></slide-verify>
+                <slide-verify slider-text="请拖动图片到指定位置" accuracy=2 @success="onSuccess1" :w="400" :h="200"></slide-verify>
             </el-card>
         </div>
     </teleport>
@@ -413,7 +408,8 @@ const handleUpdatePwd = async () => {
 
         .box-card {
             width: 400px;
-            margin: 5% 0px 0px 50%;
+            margin: 20px 0px 0px 50%;
+            // margin-left: 50%;
 
             .welcome {
                 display: flex;
