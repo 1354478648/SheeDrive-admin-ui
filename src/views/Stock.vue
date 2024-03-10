@@ -131,7 +131,6 @@ const delStock = (row) => {
                 <template #default="{ row }">
                     {{ row.carDetailInfo.year + ' ' + row.carDetailInfo.brand + row.carDetailInfo.model + ' ' +
                         row.carDetailInfo.version }}
-
                 </template>
             </el-table-column>
             <el-table-column label="地址" width="300">
