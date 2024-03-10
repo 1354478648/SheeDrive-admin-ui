@@ -4,6 +4,8 @@ import { orderListService, orderGetByIdService, orderUpdateCancelService, orderU
 import { useInfoStore } from '@/stores/info';
 const infoStore = useInfoStore()
 import { checkRole } from '@/utils/other.js'
+import { ElMessage } from 'element-plus';
+import { formatDate } from '@/utils/other.js'
 
 // 当前登录的角色
 const role = ref(checkRole(infoStore.info))
@@ -155,6 +157,14 @@ const orderUpdateConfirm = async (id) => {
 }
 
 const orderUpdateSign = async (id) => {
+    let result = await orderGetByIdService(id)
+    const orderTime = result.data.orderInfo.orderTime
+    const currentDate = new Date();
+    if (formatDate(currentDate) < orderTime) {
+        ElMessage.error("还未到预定时间！")
+        return
+    }
+
     ElMessageBox.confirm(
         `请确认用户已知晓并签署试驾协议！`,
         '提示',
@@ -560,13 +570,13 @@ const orderDelete = async (id) => {
                     <el-tag type="danger" v-if="OrderDetail.status == 0">订单取消</el-tag>
                     <el-steps v-if="OrderDetail.status != -1 && OrderDetail.status != 0"
                         style="max-width: 100%;margin: 20px 0 10px 0;" :active="OrderDetail.status" align-center>
-                        <el-step title="未确认" description="订单已生成,但经销商尚未确认" />
-                        <el-step title="已确认" description="经销商已确认,等待到预定时间" />
-                        <el-step title="签署协议" description="用户签署试驾协议" />
-                        <el-step title="试驾中" description="用户开始试驾" />
-                        <el-step title="试驾结束" description="用户结束试驾" />
-                        <el-step title="待评价" description="订单结束,等待用户评价" />
-                        <el-step title="已评价" description="用户填写评价" />
+                        <el-step title="未确认" :description="OrderDetail.orderTime" />
+                        <el-step title="已确认" :description="OrderDetail.confirmTime" />
+                        <el-step title="签署协议" :description="OrderDetail.signTime" />
+                        <el-step title="试驾中" :description="OrderDetail.startTime" />
+                        <el-step title="试驾结束" :description="OrderDetail.endTime" />
+                        <el-step title="待评价" :description="OrderDetail.precommentTime" />
+                        <el-step title="已评价" :description="OrderDetail.commentTime" />
                     </el-steps>
                 </el-descriptions-item>
             </el-descriptions>
