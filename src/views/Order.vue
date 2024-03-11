@@ -74,6 +74,17 @@ const getOrderById = async (id) => {
     showDialog.value = true
 }
 
+// 当前页码发生变化时，调用此函数
+const handleCurrentChange = (newPage) => {
+    page.value = newPage
+    getOrderList()
+}
+// 每页条数发生变化时，调用此函数
+const handleSizeChange = (newSize) => {
+    size.value = newSize
+    getOrderList()
+}
+
 // 给日期选择器提供的快捷输入选项
 const shortcuts = [
     {
@@ -289,40 +300,43 @@ const orderDelete = async (id) => {
         <!-- 搜索栏 -->
         <el-form class="search-container" :model="searchData">
             <div class="search-input">
-                <el-form-item label="用户姓名:">
+                <el-form-item label="用户姓名:" style="margin-right: 18px;">
                     <el-input v-model="searchData.userName" placeholder="请输入用户姓名" suffix-icon="Search" />
                 </el-form-item>
-                <el-form-item label="经销商名:" v-if="!role" style="margin-left: 18px;">
+                <el-form-item label="经销商名:" v-if="!role" style="margin-right: 18px;">
                     <el-input v-model="searchData.dealerName" placeholder="请输入经销商名" suffix-icon="Search" />
                 </el-form-item>
-                <el-form-item label="汽车名:" style="margin-left: 18px;">
+                <el-form-item label="汽车名:" style="margin-right: 18px;">
                     <el-input v-model="searchData.carName" placeholder="请输入汽车名" suffix-icon="Search" />
                 </el-form-item>
-                <el-form-item label="订单状态:" style="margin-left: 18px;">
+                <el-form-item label="订单状态:" style="margin-right: 18px;">
                     <el-select v-model="searchData.status" placeholder="请选择订单状态">
                         <el-option v-for="item in statusOptions" :key="item.value" :label="item.label"
                             :value="item.value" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="预定时间:" style="margin-left: 18px;">
+                <el-form-item label="预定时间:">
                     <el-date-picker v-model="searchData.orderDate" type="date" placeholder="请选择订单的预定时间"
                         :shortcuts="shortcuts" value-format="YYYY-MM-DD" />
                 </el-form-item>
             </div>
-            <el-form-item class="search-button">
-                <el-button type="primary" @click="getOrderList">查询</el-button>
-                <el-button type="default" @click="clearSearchData(); getOrderList();">重置</el-button>
-            </el-form-item>
+            <div class="button-container">
+                <el-form-item class="search-button">
+                    <el-button type="primary" @click="getOrderList">查询</el-button>
+                    <el-button type="default" @click="clearSearchData(); getOrderList();">重置</el-button>
+                </el-form-item>
+            </div>
+
         </el-form>
         <!-- 管理员列表 -->
         <el-table :data="order" style="width: 100%" stripe>
             <el-table-column label="ID" sortable prop="id"></el-table-column>
-            <el-table-column label="用户姓名" width="100">
+            <el-table-column label="用户姓名">
                 <template #default="{ row }">
                     {{ row.userInfo.lastName + row.userInfo.firstName }}
                 </template>
             </el-table-column>
-            <el-table-column label="经销商名" width="200">
+            <el-table-column label="经销商名">
                 <template #default="{ row }">
                     {{ row.dealerInfo.name }}
                 </template>
@@ -575,7 +589,8 @@ const orderDelete = async (id) => {
                             :description="OrderDetail.confirmTime ? OrderDetail.confirmTime : '请联系用户后再确认订单'" />
                         <el-step title="签署协议"
                             :description="OrderDetail.signTime ? OrderDetail.signTime : '请确保用户知晓并签署试驾协议'" />
-                        <el-step title="试驾中" :description="OrderDetail.startTime ? OrderDetail.startTime : '请确保用户开始试驾'" />
+                        <el-step title="试驾中"
+                            :description="OrderDetail.startTime ? OrderDetail.startTime : '请确保用户开始试驾'" />
                         <el-step title="试驾结束" :description="OrderDetail.endTime ? OrderDetail.endTime : '请确保用户结束试驾'" />
                         <el-step title="待评价"
                             :description="OrderDetail.precommentTime ? OrderDetail.precommentTime : '请确保完成试驾的所有流程'" />
@@ -613,12 +628,19 @@ const orderDelete = async (id) => {
 
         .search-input {
             display: flex;
+            flex-wrap: wrap;
         }
 
-        .search-button {
-            margin-left: 30px;
+        .button-container {
+            display: flex;
+            width: 300px;
+
+            .search-button {
+                margin-left: 30px;
+            }
         }
     }
+
 }
 
 .cell-item {

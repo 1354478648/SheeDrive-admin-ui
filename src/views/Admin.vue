@@ -68,7 +68,7 @@ const getAdminList = async () => {
 getAdminList()
 
 const filterStatus = (value, row) => {
-  return row.status === value
+    return row.status === value
 }
 
 // 当前页码发生变化时，调用此函数
@@ -232,26 +232,28 @@ const updateAdmin = async () => {
             </div>
         </template>
         <!-- 搜索栏 -->
-        <el-form class="search-container" :model="searchData" >
+        <el-form class="search-container" :model="searchData">
             <div class="search-input">
-                <el-form-item label="用户名:">
+                <el-form-item label="用户名:" style="margin-right: 18px;">
                     <el-input v-model="searchData.username" placeholder="请输入用户名" suffix-icon="Search" />
                 </el-form-item>
-                <el-form-item label="姓名:" style="margin-left: 18px;">
+                <el-form-item label="姓名:" style="margin-right: 18px;">
                     <el-input v-model="searchData.name" placeholder="请输入姓名" suffix-icon="Search" />
                 </el-form-item>
-                <el-form-item label="创建日期:" style="margin-left: 18px;">
+                <el-form-item label="创建日期:">
                     <el-date-picker v-model="dateTimeRange" type="datetimerange" start-placeholder="请选择时间区间"
                         end-placeholder="请选择时间区间" value-format="YYYY-MM-DD hh:mm:ss" />
                 </el-form-item>
             </div>
-            <el-form-item class="search-button">
-                <el-button type="primary" @click="getAdminList">查询</el-button>
-                <el-button type="default" @click="clearSearchData(); getAdminList();">重置</el-button>
-            </el-form-item>
+            <div class="button-container">
+                <el-form-item class="search-button">
+                    <el-button type="primary" @click="getAdminList">查询</el-button>
+                    <el-button type="default" @click="clearSearchData(); getAdminList();">重置</el-button>
+                </el-form-item>
+            </div>
         </el-form>
         <!-- 管理员列表 -->
-        <el-table :data="admin" style="width: 100%" stripe >
+        <el-table :data="admin" style="width: 100%" stripe>
             <el-table-column label="ID" sortable prop="id" width="100"></el-table-column>
             <el-table-column label="用户名" prop="username"></el-table-column>
             <el-table-column label="姓名" prop="name"> </el-table-column>
@@ -262,9 +264,9 @@ const updateAdmin = async () => {
             </el-table-column>
             <el-table-column label="手机号" prop="phone"></el-table-column>
             <el-table-column label="状态" prop="status" width="100" :filters="[
-                { text: '启用', value: 1 },
-                { text: '禁用', value: 0 },
-            ]" :filter-method="filterStatus" filter-placement="bottom-end">
+                    { text: '启用', value: 1 },
+                    { text: '禁用', value: 0 },
+                ]" :filter-method="filterStatus" filter-placement="bottom-end">
                 <template #default="{ row }">
                     <el-switch v-model="row.status" @change="onSwitchChange(row.id)" :disabled="row.isRoot"
                         :active-value="1" :inactive-value="0"></el-switch>
@@ -299,8 +301,8 @@ const updateAdmin = async () => {
         </el-table>
         <!-- 分页条 -->
         <el-pagination v-model:current-page="page" v-model:page-size="size" :page-sizes="[5, 10, 20]" :small="small"
-            :disabled="disabled" :background="background" layout="total, sizes, prev, pager, next, jumper" :total="total"
-            @size-change="handleSizeChange" @current-change="handleCurrentChange"
+            :disabled="disabled" :background="background" layout="total, sizes, prev, pager, next, jumper"
+            :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange"
             style="margin-top: 20px; justify-content: flex-end" />
     </el-card>
 
@@ -345,10 +347,15 @@ const updateAdmin = async () => {
 
         .search-input {
             display: flex;
+            flex-wrap: wrap;
         }
 
-        .search-button {
-            margin-left: 30px;
+        .button-container {
+            display: flex;
+
+            .search-button {
+                margin-left: 30px;
+            }
         }
     }
 }

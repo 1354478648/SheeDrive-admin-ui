@@ -121,21 +121,23 @@ const isHovering = ref(false)
         <!-- 搜索栏 -->
         <el-form class="search-container" :model="searchData">
             <div class="search-input">
-                <el-form-item label="用户名:">
+                <el-form-item label="用户名:" style="margin-right: 18px;">
                     <el-input v-model="searchData.username" placeholder="请输入用户名" suffix-icon="Search" />
                 </el-form-item>
-                <el-form-item label="姓名:" style="margin-left: 18px;">
+                <el-form-item label="姓名:" style="margin-right: 18px;">
                     <el-input v-model="searchData.name" placeholder="请输入姓名" suffix-icon="Search" />
                 </el-form-item>
-                <el-form-item label="创建日期:" style="margin-left: 18px;">
+                <el-form-item label="创建日期:">
                     <el-date-picker v-model="dateTimeRange" type="datetimerange" start-placeholder="请选择时间区间"
                         end-placeholder="请选择时间区间" value-format="YYYY-MM-DD hh:mm:ss" />
                 </el-form-item>
             </div>
-            <el-form-item class="search-button">
-                <el-button type="primary" @click="getUserList">查询</el-button>
-                <el-button type="default" @click="clearSearchData(); getUserList();">重置</el-button>
-            </el-form-item>
+            <div class="button-container">
+                <el-form-item class="search-button">
+                    <el-button type="primary" @click="getUserList">查询</el-button>
+                    <el-button type="default" @click="clearSearchData(); getUserList();">重置</el-button>
+                </el-form-item>
+            </div>
         </el-form>
         <!-- 用户列表 -->
         <el-table :data="user" style="width: 100%" stripe @cell-mouse-enter="isHovering = true;"
@@ -168,9 +170,9 @@ const isHovering = ref(false)
                 </template>
             </el-table-column>
             <el-table-column label="状态" prop="status" width="100" :filters="[
-                { text: '启用', value: 1 },
-                { text: '禁用', value: 0 },
-            ]" :filter-method="filterStatus" filter-placement="bottom-end">
+            { text: '启用', value: 1 },
+            { text: '禁用', value: 0 },
+        ]" :filter-method="filterStatus" filter-placement="bottom-end">
                 <template #default="{ row }">
                     <el-switch v-model="row.status" @change="onSwitchChange(row.id)" :disabled="row.isRoot"
                         :active-value="1" :inactive-value="0"></el-switch>
@@ -191,8 +193,8 @@ const isHovering = ref(false)
 
         <!-- 分页条 -->
         <el-pagination v-model:current-page="page" v-model:page-size="size" :page-sizes="[5, 10, 20]" :small="small"
-            :disabled="disabled" :background="background" layout="total, sizes, prev, pager, next, jumper" :total="total"
-            @size-change="handleSizeChange" @current-change="handleCurrentChange"
+            :disabled="disabled" :background="background" layout="total, sizes, prev, pager, next, jumper"
+            :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange"
             style="margin-top: 20px; justify-content: flex-end" />
     </el-card>
 </template>
@@ -215,10 +217,15 @@ const isHovering = ref(false)
 
         .search-input {
             display: flex;
+            flex-wrap: wrap;
         }
 
-        .search-button {
-            margin-left: 30px;
+        .button-container {
+            display: flex;
+
+            .search-button {
+                margin-left: 30px;
+            }
         }
     }
 }
