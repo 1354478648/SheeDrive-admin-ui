@@ -1,11 +1,127 @@
 <script setup>
-import { ref } from 'vue'
-import { getWeatherService } from '@/api/custom.js'
+import { ref, onMounted } from 'vue'
+import { getWeatherService, getCarRankService } from '@/api/custom.js'
 import { ElMessage } from 'element-plus';
+import * as echarts from "echarts";
+import { orderListService } from "@/api/order.js";
+import { stockListService } from '@/api/stock.js';
 
 import { useInfoStore } from '@/stores/info';
 const infoStore = useInfoStore()
 
+const orderTotal = ref()
+const orderGetTotal = async () => {
+    const params = {
+        dealerName: infoStore.info.name
+    }
+    let result = await orderListService(params)
+    orderTotal.value = result.data.Total
+}
+orderGetTotal()
+
+const carTotal = ref()
+const carGetTotal = async () => {
+    const params = {
+        dealerName: infoStore.info.name
+    }
+    let result = await stockListService(params)
+    carTotal.value = result.data.Total
+}
+carGetTotal()
+
+const main = ref() // 使用ref创建虚拟DOM引用
+const main2 = ref()
+onMounted(
+    () => {
+        initMain()
+        initMain2()
+    }
+)
+
+function initMain() {
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(main.value);
+    var option = {
+        title: {
+            text: '订单趋势'
+        },
+        tooltip: {},
+        legend: {
+            data: ['当日订单创建数', '当日预定数']
+        },
+        xAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: '当日订单创建数',
+                data: [150, 230, 224, 218, 135, 147, 260],
+                type: 'line'
+            },
+            {
+                name: '当日预定数',
+                data: [100, 200, 220, 200, 100, 10, 300],
+                type: 'line'
+            }
+        ]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+}
+
+function initMain2() {
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(main2.value);
+    var option = {
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            top: '5%',
+            left: 'center'
+        },
+        series: [
+            {
+                name: 'Access From',
+                type: 'pie',
+                radius: ['40%', '70%'],
+                avoidLabelOverlap: false,
+                itemStyle: {
+                    borderRadius: 10,
+                    borderColor: '#fff',
+                    borderWidth: 2
+                },
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: 40,
+                        fontWeight: 'bold'
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: [
+                    { value: 1048, name: 'Search Engine' },
+                    { value: 735, name: 'Direct' },
+                    { value: 580, name: 'Email' },
+                    { value: 484, name: 'Union Ads' },
+                    { value: 300, name: 'Video Ads' }
+                ]
+            }
+        ]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+}
 
 const weather = ref({})
 const getWeather = async () => {
@@ -17,11 +133,15 @@ const getWeather = async () => {
     }
     let result = await getWeatherService(params)
     weather.value = result.data
-    console.log(weather.value)
 }
 getWeather()
 
 const carRank = ref([])
+const getCarRank = async () => {
+    let result = await getCarRankService()
+    carRank.value = result.data.List
+}
+getCarRank()
 </script>
 
 <template>
@@ -33,7 +153,42 @@ const carRank = ref([])
                         <span>欢迎回来！<strong>{{ infoStore.info.name }}</strong></span>
                     </div>
                 </template>
-                统计与图表
+                <div>
+                    <div class="item-container">
+                        <div class="item">
+                            <el-image class="el-image" src="src/assets/popularity-025aa888.png"></el-image>
+                            <div class="text">
+                                <span style="font-size: 14px;margin-bottom: 10px;">累计服务（人）</span>
+                                <span style="font-size: 20px;">{{ orderTotal }}</span>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <el-image class="el-image" src="src/assets/same-city-a8b8e292.png"></el-image>
+                            <div class="text">
+                                <span style="font-size: 14px;margin-bottom: 10px;">待完成订单（件）</span>
+                                <span style="font-size: 20px;">6</span>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <el-image class="el-image" src="src/assets/data-9d10c710.png"></el-image>
+                            <div class="text">
+                                <span style="font-size: 14px;margin-bottom: 10px;">在库车辆（辆）</span>
+                                <span style="font-size: 20px;">{{ carTotal }}</span>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <el-image class="el-image" src="src/assets/hot-4ea8698b.png"></el-image>
+                            <div class="text">
+                                <span style="font-size: 14px;margin-bottom: 10px;">综合评分（分）</span>
+                                <span style="font-size: 20px;">5</span>
+                            </div>
+                        </div>
+                    </div>
+                    <el-divider border-style="dashed" />
+                    <div>
+                        <div ref="main" style="display: flex;justify-content: center;width: 100%; height: 350px"></div>
+                    </div>
+                </div>
             </el-card>
             <div class="left-col-second-container">
                 <el-card style="margin-right:10px" shadow="hover">
@@ -42,7 +197,7 @@ const carRank = ref([])
                             <span>用户地域统计</span>
                         </div>
                     </template>
-                    统计与图表
+                    <div ref="main2" style="display: flex;justify-content: center;width: 100%; height: 450px"></div>
                 </el-card>
                 <el-card shadow="hover">
                     <template #header>
@@ -51,9 +206,13 @@ const carRank = ref([])
                         </div>
                     </template>
                     <el-table :data="carRank" stripe style="width: 100%">
-                        <el-table-column prop="id" label="排名"  />
-                        <el-table-column prop="name" label="汽车" width="300" />
-                        <el-table-column prop="address" label="订单交易量" />
+                        <el-table-column type="index" label="排名" width="60" />
+                        <el-table-column label="汽车" width="300">
+                            <template #default="{ row }">
+                                {{ row.carInfo.brand + row.carInfo.model + ' ' + row.carInfo.version }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="times" label="订单交易量" />
                     </el-table>
                 </el-card>
             </div>
@@ -172,6 +331,33 @@ const carRank = ref([])
         .left-col-second-container {
             display: flex;
         }
+
+        .item-container {
+            display: flex;
+            /* flex-wrap: wrap; */
+            justify-content: center;
+
+            .item {
+                width: 200px;
+                margin: 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+
+                .el-image {
+                    width: 50px;
+                    height: auto;
+                    margin-bottom: 10px;
+                }
+
+                .text {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+            }
+        }
     }
 
     .right-col-container {
@@ -190,7 +376,7 @@ const carRank = ref([])
             margin-bottom: 5px;
 
             .temperature-container {
-                font-size: 48px;
+                font-size: 36px;
                 margin-right: 10px;
                 margin-top: 20px;
             }

@@ -5,3 +5,7 @@ export const getWeatherService = (params) => {
     const queryString = suffix_query(params);
     return request.get(`/dashboard/weather${queryString}`);
 }
+
+export const getCarRankService = ()=>{
+    return request.get('/order/get/carRank');
+}
