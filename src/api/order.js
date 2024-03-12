@@ -52,3 +52,13 @@ export const orderDeleteService = (id) => {
 export const orderGetIncompleteService = (id) => {
     return request.get(`/order/get/incomplete?dealerId=${id}`);
 }
+
+// 获取订单地址出现次数
+export const orderGetAddressCountService = (id) => {
+    return request.get(`/order/get/address/times?dealerId=${id}`);
+}
+
+// 获取订单预定次数
+export const orderGetTimeCountService = (id) => {
+    return request.get(`/order/get/times?dealerId=${id}`);
+}

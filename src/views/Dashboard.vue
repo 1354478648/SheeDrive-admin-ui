@@ -3,8 +3,9 @@ import { ref, onMounted } from 'vue'
 import { getWeatherService, getCarRankService } from '@/api/custom.js'
 import { ElMessage } from 'element-plus';
 import * as echarts from "echarts";
-import { orderListService, orderGetIncompleteService } from "@/api/order.js";
+import { orderListService, orderGetIncompleteService, orderGetAddressCountService, orderGetTimeCountService } from "@/api/order.js";
 import { stockListService } from '@/api/stock.js';
+import { dealerGetDealerAvgScoreService } from '@/api/comment.js'
 
 import { useInfoStore } from '@/stores/info';
 const infoStore = useInfoStore()
@@ -36,51 +37,18 @@ const carGetTotal = async () => {
 }
 carGetTotal()
 
-const main = ref() // 使用ref创建虚拟DOM引用
-const main2 = ref()
-onMounted(
-    () => {
-        initMain()
-        initMain2()
-    }
-)
-
-function initMain() {
-    // 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(main.value);
-    var option = {
-        title: {
-            text: '订单趋势'
-        },
-        tooltip: {},
-        legend: {
-            data: ['当日订单创建数', '当日预定数']
-        },
-        xAxis: {
-            type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: [
-            {
-                name: '当日订单创建数',
-                data: [150, 230, 224, 218, 135, 147, 260],
-                type: 'line'
-            },
-            {
-                name: '当日预定数',
-                data: [100, 200, 220, 200, 100, 10, 300],
-                type: 'line'
-            }
-        ]
-    };
-    // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option);
+const dealerAvgScore = ref()
+const dealerGetDealerAvgScore = async () => {
+    let result = await dealerGetDealerAvgScoreService(infoStore.info.id)
+    dealerAvgScore.value = result.data.avg
 }
+dealerGetDealerAvgScore()
 
-function initMain2() {
+const orderAddrCount = ref([])
+const orderGetAddressCount = async () => {
+    let result = await orderGetAddressCountService(infoStore.info.id)
+    orderAddrCount.value = result.data.List
+
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(main2.value);
     var option = {
@@ -93,7 +61,7 @@ function initMain2() {
         },
         series: [
             {
-                name: 'Access From',
+                name: '暂无数据，快去招揽客户吧 ~',
                 type: 'pie',
                 radius: ['40%', '70%'],
                 avoidLabelOverlap: false,
@@ -116,13 +84,10 @@ function initMain2() {
                 labelLine: {
                     show: false
                 },
-                data: [
-                    { value: 1048, name: 'Search Engine' },
-                    { value: 735, name: 'Direct' },
-                    { value: 580, name: 'Email' },
-                    { value: 484, name: 'Union Ads' },
-                    { value: 300, name: 'Video Ads' }
-                ]
+                data: orderAddrCount.value.map(item => ({
+                    value: item.times,
+                    name: item.addressInfo.province + item.addressInfo.city + item.addressInfo.district
+                })),
             }
         ]
     };
@@ -130,6 +95,48 @@ function initMain2() {
     myChart.setOption(option);
 }
 
+const orderCount = ref()
+const orderGetTimeCount = async()=>{
+    let result = await orderGetTimeCountService(infoStore.info.id)
+    orderCount.value = result.data
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(main.value);
+    var option = {
+        title: {
+            text: '订单趋势'
+        },
+        tooltip: {},
+        legend: {
+            data: ['当日订单创建数']
+        },
+        xAxis: {
+            type: 'category',
+            data: orderCount.value.timeSeries
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: '当日预定数',
+                data: orderCount.value.orderCount,
+                type: 'line'
+            }
+        ]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+}
+
+const main = ref() // 使用ref创建虚拟DOM引用
+const main2 = ref()
+onMounted(
+    () => {
+        orderGetTimeCount()
+        orderGetAddressCount()
+    }
+)
 const weather = ref({})
 const getWeather = async () => {
     const params = {
@@ -187,7 +194,7 @@ getCarRank()
                             <el-image class="el-image" src="src/assets/hot-4ea8698b.png"></el-image>
                             <div class="text">
                                 <span style="font-size: 14px;margin-bottom: 10px;">综合评分（分）</span>
-                                <span style="font-size: 20px;">5</span>
+                                <span style="font-size: 20px;">{{ dealerAvgScore }}</span>
                             </div>
                         </div>
                     </div>

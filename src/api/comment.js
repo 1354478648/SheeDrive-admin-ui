@@ -7,7 +7,12 @@ export const commentListService = (params) => {
     return request.get(`/comment/list${queryString}`);
 }
 
-// 管理员删除
+// 评论删除
 export const commentDeleteService = (id) => {
     return request.delete(`/comment/delete?id=${id}`);
+}
+
+// 经销商平均评分查询
+export const dealerGetDealerAvgScoreService = (id) => {
+    return request.get(`/comment/get/avg?dealerId=${id}`);
 }
