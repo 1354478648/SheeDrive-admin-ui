@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 import { getWeatherService, getCarRankService } from '@/api/custom.js'
 import { ElMessage } from 'element-plus';
 import * as echarts from "echarts";
-import { orderListService } from "@/api/order.js";
+import { orderListService, orderGetIncompleteService } from "@/api/order.js";
 import { stockListService } from '@/api/stock.js';
 
 import { useInfoStore } from '@/stores/info';
@@ -18,6 +18,13 @@ const orderGetTotal = async () => {
     orderTotal.value = result.data.Total
 }
 orderGetTotal()
+
+const incompleteTotal = ref()
+const orderGetIncomplete = async () => {
+    let result = await orderGetIncompleteService(infoStore.info.id)
+    incompleteTotal.value = result.data.total
+}
+orderGetIncomplete()
 
 const carTotal = ref()
 const carGetTotal = async () => {
@@ -166,7 +173,7 @@ getCarRank()
                             <el-image class="el-image" src="src/assets/same-city-a8b8e292.png"></el-image>
                             <div class="text">
                                 <span style="font-size: 14px;margin-bottom: 10px;">待完成订单（件）</span>
-                                <span style="font-size: 20px;">6</span>
+                                <span style="font-size: 20px;">{{ incompleteTotal }}</span>
                             </div>
                         </div>
                         <div class="item">

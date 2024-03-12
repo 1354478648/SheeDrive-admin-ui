@@ -47,3 +47,8 @@ export const orderUpdateEndAllService = (data) => {
 export const orderDeleteService = (id) => {
     return request.delete(`/order/delete?id=${id}`);
 }
+
+// 获取未完成订单数
+export const orderGetIncompleteService = (id) => {
+    return request.get(`/order/get/incomplete?dealerId=${id}`);
+}
