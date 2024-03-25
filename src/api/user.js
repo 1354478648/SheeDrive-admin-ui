@@ -16,3 +16,8 @@ export const userUpdateStatusService = (id) => {
 export const userDeleteService = (id) => {
     return request.delete(`/user/delete?id=${id}`);
 }
+
+// 用户添加
+export const userAddService = (params) => {
+    return request.post("/user/register", params);
+}

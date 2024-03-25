@@ -344,7 +344,7 @@ const orderDelete = async (id) => {
             <el-table-column label="汽车名">
                 <template #default="{ row }">
                     {{ row.carDetailInfo.year + ' ' + row.carDetailInfo.brand + row.carDetailInfo.model + ' ' +
-            row.carDetailInfo.version }}
+                    row.carDetailInfo.version }}
                 </template>
             </el-table-column>
             <el-table-column label="用户手机号" width="150">
@@ -355,20 +355,20 @@ const orderDelete = async (id) => {
             <el-table-column label="用户地址">
                 <template #default="{ row }">
                     {{ row.address.province + ' ' + row.address.city + ' ' + row.address.district + ' ' +
-            row.address.detail }}
+                    row.address.detail }}
                 </template>
             </el-table-column>
             <el-table-column label="状态" prop="status" width="100" :filters="[
-            { text: '异常', value: -1 },
-            { text: '取消', value: 0 },
-            { text: '未确认', value: 1 },
-            { text: '已确认', value: 2 },
-            { text: '签署协议', value: 3 },
-            { text: '试驾中', value: 4 },
-            { text: '试驾结束', value: 5 },
-            { text: '待评价', value: 6 },
-            { text: '已评价', value: 7 },
-        ]" :filter-method="filterStatus" filter-placement="bottom-end">
+                    { text: '异常', value: -1 },
+                    { text: '取消', value: 0 },
+                    { text: '未确认', value: 1 },
+                    { text: '已确认', value: 2 },
+                    { text: '签署协议', value: 3 },
+                    { text: '试驾中', value: 4 },
+                    { text: '试驾结束', value: 5 },
+                    { text: '待评价', value: 6 },
+                    { text: '已评价', value: 7 },
+                ]" :filter-method="filterStatus" filter-placement="bottom-end">
                 <template #default="{ row }">
                     <el-tag color="#f78989" v-if="row.status == -1" effect="dark">异常</el-tag>
                     <el-tag type="danger" v-if="row.status == 0">取消</el-tag>
@@ -489,8 +489,8 @@ const orderDelete = async (id) => {
                         </div>
                     </template>
                     {{ OrderDetail.address.province + ' ' + OrderDetail.address.city + ' ' +
-            OrderDetail.address.district
-            + ' ' + OrderDetail.address.detail }}
+                    OrderDetail.address.district
+                    + ' ' + OrderDetail.address.detail }}
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template #label>
@@ -524,7 +524,7 @@ const orderDelete = async (id) => {
                         </div>
                     </template>
                     {{ OrderDetail.dealerInfo.address.Province + ' ' + OrderDetail.dealerInfo.address.City + ' ' +
-            OrderDetail.dealerInfo.address.District + ' ' + OrderDetail.dealerInfo.address.Detail }}
+                    OrderDetail.dealerInfo.address.District + ' ' + OrderDetail.dealerInfo.address.Detail }}
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template #label>
@@ -547,7 +547,7 @@ const orderDelete = async (id) => {
                         </div>
                     </template>
                     {{ OrderDetail.carDetailInfo.year + ' ' + OrderDetail.carDetailInfo.brand + ' ' +
-            OrderDetail.carDetailInfo.model + ' ' + OrderDetail.carDetailInfo.version }}
+                    OrderDetail.carDetailInfo.model + ' ' + OrderDetail.carDetailInfo.version }}
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template #label>

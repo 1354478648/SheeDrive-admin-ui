@@ -62,3 +62,8 @@ export const orderGetAddressCountService = (id) => {
 export const orderGetTimeCountService = (id) => {
     return request.get(`/order/get/times?dealerId=${id}`);
 }
+
+// 订单添加
+export const orderAddService = (params) => {
+    return request.post('/order/add', params);
+}

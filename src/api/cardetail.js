@@ -20,5 +20,10 @@ export const carDetailDeleteService = (id) => {
 
 // 汽车信息修改
 export const carDetailUpdateService = (cardetailData) => {
-    return request.put("/cardetail/update", cardetailData);    
+    return request.put("/cardetail/update", cardetailData);
+}
+
+// 汽车信息通过Id查询
+export const carDetailGetByIdService = (id) => {
+    return request.get(`/cardetail/detail?id=${id}`);
 }
