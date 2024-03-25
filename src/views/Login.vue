@@ -256,7 +256,7 @@ const handleUpdatePwd = async () => {
     <div class="root">
         <div class="header">
             <div class="logo">
-                <img style="width: 200px" src="@/assets/title_SheeDrive.png" />
+                <img style="width: 200px" src="@/assets/new-logo.png" />
             </div>
             <div class="app-download">
                 <a class="a" href="#" style="display: flex; align-items: center;">
@@ -272,7 +272,7 @@ const handleUpdatePwd = async () => {
             <el-card class="box-card">
                 <div class="welcome">
                     <el-text class="text">
-                        欢迎使用小羊试驾后台管理系统
+                        欢迎使用汽车试驾管理系统
                     </el-text>
                 </div>
                 <!-- 登录流程 -->

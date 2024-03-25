@@ -61,7 +61,7 @@ const orderGetAddressCount = async () => {
         },
         series: [
             {
-                name: '暂无数据，快去招揽客户吧 ~',
+                // name: '暂无数据，快去招揽客户吧 ~',
                 type: 'pie',
                 radius: ['40%', '70%'],
                 avoidLabelOverlap: false,

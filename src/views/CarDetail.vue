@@ -329,7 +329,7 @@ const addStock = async (row) => {
         <template #header>
             <div class="card-header">
                 <span>汽车信息管理</span>
-                <el-button type="primary" @click="title = '添加汽车信息'; drawer = true;">添加汽车信息</el-button>
+                <el-button v-if="!role" type="primary" @click="title = '添加汽车信息'; drawer = true;">添加汽车信息</el-button>
             </div>
         </template>
         <!-- 搜索栏 -->

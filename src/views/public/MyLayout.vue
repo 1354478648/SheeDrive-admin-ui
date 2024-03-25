@@ -55,7 +55,7 @@ const handleCommand = (command) => {
     <div class="el-menu-container">
         <el-menu router default-active="/dashboard" class="el-menu-vertical-demo">
             <div class="logo">
-                <img style="width: 175px;" src="@/assets/title_SheeDrive.png" />
+                <img style="width: 175px;" src="@/assets/new-logo.png" />
             </div>
             <el-divider border-style="dashed">
             </el-divider>
