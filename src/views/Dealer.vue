@@ -228,6 +228,9 @@ const showDrawer = (row) => {
     dealerData.value.phone = row.phone
     dealerData.value.describeInfo = row.describeInfo
     ssqArr.value = [row.address.Province, row.address.City, row.address.District]
+    dealerData.value.province = row.address.Province
+    dealerData.value.city = row.address.City
+    dealerData.value.district = row.address.District
     dealerData.value.detailAddress = row.address.Detail
 }
 
@@ -329,25 +332,25 @@ const updateDealer = async () => {
 
     <!-- 经销商添加&修改 -->
     <el-drawer v-model="drawer" :title="title" direction="rtl" :before-close="handleClose">
-        <el-form :rules="rules" label-width="80px" :model="dealerData" class="el-form">
-            <el-form-item prop="name" label="名字:">
+        <el-form :rules="rules" label-width="80px" :model="dealerData" class="el-form" size="large">
+            <el-form-item prop="name" label="名字:" size="large">
                 <el-input v-model="dealerData.name" size="large" placeholder="请输入名字" clearable />
             </el-form-item>
-            <el-form-item prop="username" label="用户名:">
+            <el-form-item prop="username" label="用户名:" size="large">
                 <el-input v-model="dealerData.username" size="large" placeholder="请输入用户名" clearable />
             </el-form-item>
-            <el-form-item prop="phone" label="手机号:">
+            <el-form-item prop="phone" label="手机号:" size="large">
                 <el-input v-model="dealerData.phone" size="large" placeholder="请输入手机号" maxlength="11" show-word-limit
                     clearable />
             </el-form-item>
-            <el-form-item prop="describeInfo" label="描述信息:">
+            <el-form-item prop="describeInfo" label="描述信息:" size="large">
                 <el-input v-model="dealerData.describeInfo" size="large" placeholder="请输入描述信息" clearable />
             </el-form-item>
-            <el-form-item prop="address" label="省市区:">
+            <el-form-item prop="address" label="省市区:" size="large">
                 <el-cascader v-model="ssqArr" size="large" :options="pcaTextArr" @change="handleChange" clearable>
                 </el-cascader>
             </el-form-item>
-            <el-form-item prop="detailAddress" label="详细地址:">
+            <el-form-item prop="detailAddress" label="详细地址:" size="large">
                 <el-input v-model="dealerData.detailAddress" size="large" placeholder="请输入详细地址" clearable />
             </el-form-item>
         </el-form>

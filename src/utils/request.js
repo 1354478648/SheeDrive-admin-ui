@@ -1,7 +1,7 @@
 //导入axios  npm install axios
 import axios from 'axios';
 import { ElMessage } from 'element-plus'
-import router from '@/router' 
+import router from '@/router'
 import { useTokenStore } from '@/stores/token.js'
 
 //定义变量baseURL,用于记录公共的前缀
@@ -37,6 +37,10 @@ instance.interceptors.response.use(
             ElMessage.error(result.data.message ? result.data.message : '请先登录')
             router.push('/login')
         }
+        // if (result.data.code === 50) {
+        //     ElMessage.error(result.data.message ? result.data.message : '操作失败')
+        //     return result.data;
+        // }
         //操作失败
         ElMessage.error(result.data.message ? result.data.message : '操作失败')
         return Promise.reject(result.data.message);

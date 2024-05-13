@@ -9,6 +9,14 @@ import { checkRole } from '@/utils/other.js'
 // 当前登录的角色
 const role = ref(checkRole(infoStore.info))
 
+// 超级管理员不允许修改密码
+const forbidden = ref(false)
+if (role.value == 0) {
+    if (infoStore.info.isRoot == 1) {
+        forbidden.value = true
+    }
+}
+
 const pwd = ref({
     oPwd: '',
     nPwd: '',
@@ -49,11 +57,11 @@ const updatePwd = async () => {
 
     if (role.value == 1) {
         await dealerUpdatePasswordService(params)
+        ElMessage.success('修改经销商密码成功')
     } else if (role.value == 0) {
         await adminUpdatePasswordService(params)
+        ElMessage.success('修改管理员密码成功')
     }
-
-    ElMessage.success('修改密码成功')
 }
 </script>
 
@@ -76,7 +84,7 @@ const updatePwd = async () => {
                     <el-input v-model="pwd.cPwd" size="large" placeholder="请重新输入新密码" clearable show-password />
                 </el-form-item>
             </el-form>
-            <el-button @click="updatePwd" type="primary" class="confirm-button">确认修改</el-button>
+            <el-button @click="updatePwd" type="primary" class="confirm-button" :disabled="forbidden">确认修改</el-button>
         </div>
 
     </el-card>

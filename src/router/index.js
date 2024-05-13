@@ -76,7 +76,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-    document.title = "小羊试驾 | " + to.meta.title || "小羊试驾" // "demo"是默认名字
+    document.title = "汽车试驾系统 | " + to.meta.title || "小羊试驾" // "demo"是默认名字
 })
 
 // 导出路由

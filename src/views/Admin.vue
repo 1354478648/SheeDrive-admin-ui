@@ -308,14 +308,14 @@ const updateAdmin = async () => {
 
     <!-- 管理员添加&修改 -->
     <el-drawer v-model="drawer" :title="title" direction="rtl" :before-close="handleClose">
-        <el-form :rules="rules" label-width="80px" :model="adminData" class="el-form">
-            <el-form-item prop="name" label="姓名:">
+        <el-form :rules="rules" label-width="80px" :model="adminData" class="el-form" size="large">
+            <el-form-item prop="name" label="姓名:" size="large">
                 <el-input v-model="adminData.name" size="large" placeholder="请输入姓名" clearable />
             </el-form-item>
-            <el-form-item prop="username" label="用户名:">
+            <el-form-item prop="username" label="用户名:" size="large">
                 <el-input v-model="adminData.username" size="large" placeholder="请输入用户名" clearable />
             </el-form-item>
-            <el-form-item prop="phone" label="手机号:">
+            <el-form-item prop="phone" label="手机号:" size="large">
                 <el-input v-model="adminData.phone" size="large" placeholder="请输入手机号" maxlength="11" show-word-limit
                     clearable />
             </el-form-item>

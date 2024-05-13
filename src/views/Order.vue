@@ -59,6 +59,8 @@ const getOrderList = async () => {
     }
     let result = await orderListService(params)
 
+    console.log(result.data)
+
     page.value = result.data.Page
     size.value = result.data.Size
     total.value = result.data.Total

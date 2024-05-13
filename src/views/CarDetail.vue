@@ -32,10 +32,10 @@ const drawer = ref(false)
 // 定义变量，用于控制弹窗标题的显示
 const title = ref('')
 
-// 管理员列表数据模型
+// 汽车信息列表数据模型
 const cardetail = ref([])
 
-// 获取管理员分页数据
+// 获取汽车信息分页数据
 const previewSrcList = []
 const getCarDetailList = async () => {
     const params = {
@@ -193,7 +193,7 @@ const handleAvatarSuccess = (result) => {
     cardetailData.value.image = result.data.url;
 }
 
-// 清空管理员添加修改对象
+// 清空汽车信息添加修改对象
 const clearCarDetailData = () => {
     cardetailData.value = {
         year: '',
@@ -210,7 +210,7 @@ const clearCarDetailData = () => {
 }
 
 const handleClose = () => {
-    if (title.value == '修改管理员') {
+    if (title.value == '修改汽车信息') {
         drawer.value = false
         clearCarDetailData()
     }
@@ -273,7 +273,7 @@ const delCarDetail = (row) => {
 }
 
 const showDrawer = (row) => {
-    title.value = '修改管理员'
+    title.value = '修改汽车信息'
     drawer.value = true
     cardetailId.value = row.id
 
